@@ -193,3 +193,6 @@ nbdist/
 
 # VSCODE BEGIN
 Settings.JSON
+
+# OTHER BEGIN
+*.png
