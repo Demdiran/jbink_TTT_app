@@ -196,3 +196,4 @@ Settings.JSON
 
 # OTHER BEGIN
 *.png
+sequence_diagrams/
