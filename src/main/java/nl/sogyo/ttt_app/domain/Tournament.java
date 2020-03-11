@@ -20,7 +20,7 @@ public class Tournament{
     @Id
     @GeneratedValue
     @Column(name = "tournament_ID")
-    private int toernooi_ID;
+    private int tournamentID;
     @Column(name = "tournament_name")
     private String name;
     @Column(name = "adress")
@@ -39,6 +39,37 @@ public class Tournament{
 
     public Tournament(String name){
         this.name = name;
+    }
+
+    public int getTournamentID(){
+        return tournamentID;
+    }
+    public void setTournamentID(int id){
+        this.tournamentID = id;
+    }
+    public String getName(){
+        return name;
+    }
+    public void setName(String name){
+        this.name = name;
+    }
+    public String getAdress(){
+        return adress;
+    }
+    public void setAdress(String adress){
+        this.adress = adress;
+    }
+    public LocalDateTime getDate(){
+        return tournamentDate;
+    }
+    public void setDate(LocalDateTime tournamentDate){
+        this.tournamentDate = tournamentDate;
+    }
+    public int getMaxParticipants(){
+        return maxParticipants;
+    }
+    public void setMaxParticipants(int maxParticipants){
+        this.maxParticipants = maxParticipants;
     }
 
     // public void playerSignUp(Player player){

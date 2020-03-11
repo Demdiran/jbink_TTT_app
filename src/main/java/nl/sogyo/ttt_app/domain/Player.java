@@ -42,14 +42,30 @@ public class Player{
     public Player(String name){
         this.name = name;
     }
-    public int getRating(){
-        return rating;
-    }
+
     public int getID(){
-        return this.player_ID;
+        return player_ID;
     }
     public void setID(int id){
         this.player_ID = id;
+    }
+    public int getRating(){
+        return rating;
+    }
+    public void setRating(int rating){
+       this.rating = rating;
+    }
+    public String getName(){
+        return name;
+    }
+    public void setName(String name){
+        this.name = name;
+    }
+    public String getAdress(){
+        return adress;
+    }
+    public void setAdress(String adress){
+        this.adress = adress;
     }
 
     // public void signUpForTournament(Tournament tournament){
