@@ -4,12 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-class TestSpeler{
+class TestPlayer{
 
     @Test
-    public void TestSpelerHeeftRating(){
-        Speler speler = new Speler();
-        int rating = speler.getRating();
+    public void TestPlayerHasRating(){
+        Player player = new Player();
+        int rating = player.getRating();
         assertEquals(0, rating);
     }
 
