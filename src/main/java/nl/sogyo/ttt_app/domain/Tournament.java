@@ -4,21 +4,18 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.HashSet;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 @Entity
 @Table(name = "tournaments")
 public class Tournament{
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "tournament_ID")
     private int tournamentID;
     @Column(name = "tournament_name")
@@ -30,8 +27,8 @@ public class Tournament{
     @Column(name = "max_participants")
     private int maxParticipants;
 
-    // @ManyToMany(mappedBy = "tournaments")
-    // private Set<Player> participants = new HashSet<Player>();
+    @ManyToMany(mappedBy = "tournaments")
+    private Set<Player> participants = new HashSet<Player>();
 
     public Tournament(){
 
@@ -71,8 +68,11 @@ public class Tournament{
     public void setMaxParticipants(int maxParticipants){
         this.maxParticipants = maxParticipants;
     }
+    public Set<Player> getParticipants(){
+        return participants;
+    }
 
-    // public void playerSignUp(Player player){
-    //     participants.add(player);
-    // }
+    public void playerSignUp(Player player){
+        participants.add(player);
+    }
 }

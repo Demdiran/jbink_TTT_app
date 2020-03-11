@@ -6,4 +6,4 @@ create table `tournaments`(
 `adress`				varchar(50),
 `max_participants`		int unsigned,
 primary key(`tournament_ID`)
-)
+);

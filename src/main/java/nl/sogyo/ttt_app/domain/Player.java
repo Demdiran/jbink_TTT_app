@@ -6,8 +6,8 @@ import java.util.HashSet;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -17,7 +17,8 @@ import javax.persistence.Table;
 @Entity(name = "player")
 @Table(name = "players")
 public class Player{
-    @Id@GeneratedValue
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "player_ID")
     private int player_ID;
     @Column(name = "player_rating")
@@ -27,13 +28,13 @@ public class Player{
     @Column(name = "player_adress")
     private String adress;
 
-    // @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    // @JoinTable(
-    //     name = "player_tournament",
-    //     joinColumns = { @JoinColumn(name = "player_ID")},
-    //     inverseJoinColumns = { @JoinColumn(name = "tournament_ID")}
-    // )
-    // private Set<Tournament> tournaments = new HashSet<Tournament>();
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+        name = "player_tournament",
+        joinColumns = { @JoinColumn(name = "player_ID")},
+        inverseJoinColumns = { @JoinColumn(name = "tournament_ID")}
+    )
+    private Set<Tournament> tournaments = new HashSet<Tournament>();
 
     public Player(){
 
@@ -67,9 +68,12 @@ public class Player{
     public void setAdress(String adress){
         this.adress = adress;
     }
+    public Set<Tournament> getTournaments(){
+        return tournaments;
+    }
 
-    // public void signUpForTournament(Tournament tournament){
-    //     this.tournaments.add(tournament);
-    //     tournament.playerSignUp(this);
-    // }
+    public void signUpForTournament(Tournament tournament){
+        this.tournaments.add(tournament);
+        tournament.playerSignUp(this);
+    }
 }

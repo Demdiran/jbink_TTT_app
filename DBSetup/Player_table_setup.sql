@@ -6,4 +6,3 @@ CREATE TABLE `players`(
 `player_adress`					varchar(50),
 primary key(`player_ID`)
 );
-insert into ttt_db (player_name, player_rating) values ('testplayer', 800);
