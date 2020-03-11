@@ -21,8 +21,8 @@
 		<property name="hibernate.current_session_context_class">org.hibernate.context.internal.ThreadLocalSessionContext</property>
 		
 		<!-- Mapping With Model Class Containing Annotations -->
-		<mapping class="nl.sogyo.ttt_app.domain.Speler" />
-		<mapping class="nl.sogyo.ttt_app.domain.Toernooi" />
+		<mapping class="nl.sogyo.ttt_app.domain.Player" />
+		<mapping class="nl.sogyo.ttt_app.domain.Tournament" />
 	</session-factory>
 	
 </hibernate-configuration>
