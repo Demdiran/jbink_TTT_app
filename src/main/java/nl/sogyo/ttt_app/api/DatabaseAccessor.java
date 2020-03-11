@@ -26,5 +26,32 @@ class DatabaseAccessor{
 			System.err.println("Initial SessionFactory creation failed." + ex);
 			throw new ExceptionInInitializerError(ex);
 		}
-    }
+	}
+	
+	public Player getPlayer(int ID){
+		Session hibernateSession = null;
+		Player player = null;
+        try {
+			java.util.logging.Logger.getLogger("org.hibernate").setLevel(java.util.logging.Level.OFF);
+			hibernateSession = DatabaseAccessor.buildSessionFactory().openSession();
+            java.util.logging.Logger.getLogger("org.hibernate").setLevel(java.util.logging.Level.OFF);
+			
+			hibernateSession.beginTransaction();
+			player = hibernateSession.get(Player.class, ID);
+			hibernateSession.getTransaction().commit();
+            
+        } catch (Exception sqlException) {
+			if (null != hibernateSession.getTransaction()) {
+				System.out.println("\n.......Transaction Is Being Rolled Back.......");
+				hibernateSession.getTransaction().rollback();
+			}
+			sqlException.printStackTrace();
+		} finally {
+			if (hibernateSession != null && hibernateSession.isOpen()) {
+				hibernateSession.close();
+			}
+			System.out.println("\n.......Hibernate session closed!.......");
+		}
+		return player;
+	}
 }
