@@ -11,9 +11,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import nl.sogyo.ttt_app.api.IStorable;
 @Entity
 @Table(name = "tournaments")
-public class Tournament{
+public class Tournament implements IStorable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "tournament_ID")
@@ -38,11 +40,11 @@ public class Tournament{
         this.name = name;
     }
 
-    public int getTournamentID(){
+    public int getID(){
         return tournamentID;
     }
-    public void setTournamentID(int id){
-        this.tournamentID = id;
+    public void setID(int ID){
+        this.tournamentID = ID;
     }
     public String getName(){
         return name;

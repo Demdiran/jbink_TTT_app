@@ -21,8 +21,7 @@ public class TestDatabaseAccessor{
 
     @AfterEach
     public void databaseAccessorTeardown(){
-        if(hibernateSession.isOpen())
-            hibernateSession.close();
+        databaseAccessor.closeSession();
     }
 
     @Test
@@ -30,17 +29,37 @@ public class TestDatabaseAccessor{
         Player testplayerin = new Player();
         testplayerin.setRating(800);
         testplayerin.setName("testplayer1");
-        databaseAccessor.persistPlayer(testplayerin);
+        databaseAccessor.createInDB(testplayerin);
 
         hibernateSession.clear();
 
-        Player testplayer = databaseAccessor.getPlayer(testplayerin.getID());
+        Player testplayer = (Player) databaseAccessor.getFromDB(testplayerin.getID(), Player.class);
         assertEquals("testplayer1", testplayer.getName());
         assertEquals(800, testplayer.getRating());
     }
 
     @Test
-    public void TestManyToMany(){
+    public void TestUpdatePlayer(){
+        Player testplayerin = new Player();
+        testplayerin.setName("testplayerin");
+        testplayerin.setRating(0);
+        databaseAccessor.createInDB(testplayerin);
+
+        hibernateSession.clear();
+        
+        Player testplayerout = (Player) databaseAccessor.getFromDB(testplayerin.getID(), Player.class);
+
+        testplayerout.setName("testplayerout");
+        databaseAccessor.updateInDB(testplayerout);
+
+        hibernateSession.clear();
+
+        Player testplayerFinal = (Player) databaseAccessor.getFromDB(testplayerin.getID(), Player.class);
+        assertEquals("testplayerout", testplayerFinal.getName());
+    }
+
+    @Test
+    public void TestManyToManyOfPlayer_Tournament(){
         Player testplayer1 = new Player();
         testplayer1.setRating(800);
         testplayer1.setName("testplayer1");
@@ -56,15 +75,15 @@ public class TestDatabaseAccessor{
         testplayer1.signUpForTournament(testTournament2);
         testplayer2.signUpForTournament(testTournament1);
 
-        databaseAccessor.persistPlayer(testplayer1);
-        databaseAccessor.persistPlayer(testplayer2);
+        databaseAccessor.createInDB(testplayer1);
+        databaseAccessor.createInDB(testplayer2);
 
         hibernateSession.clear();
 
-        Player testplayer1out = databaseAccessor.getPlayer(testplayer1.getID());
-        Player testplayer2out = databaseAccessor.getPlayer(testplayer2.getID());
-        Tournament testtTournament1out = databaseAccessor.getTournament(testTournament1.getTournamentID());
-        Tournament testtTournament2out = databaseAccessor.getTournament(testTournament2.getTournamentID());
+        Player testplayer1out = (Player) databaseAccessor.getFromDB(testplayer1.getID(), Player.class);
+        Player testplayer2out = (Player) databaseAccessor.getFromDB(testplayer2.getID(), Player.class);
+        Tournament testtTournament1out = (Tournament) databaseAccessor.getFromDB(testTournament1.getID(), Tournament.class);
+        Tournament testtTournament2out = (Tournament) databaseAccessor.getFromDB(testTournament2.getID(), Tournament.class);
 
         assertEquals("testplayer1", testplayer1out.getName());
         assertEquals(800, testplayer1out.getRating());
@@ -72,7 +91,6 @@ public class TestDatabaseAccessor{
         assertEquals(1000, testplayer2out.getRating());
         assert(testplayer1out.getTournaments().contains(testtTournament1out));
         assert(testplayer1out.getTournaments().contains(testtTournament2out));
-        assert(testtTournament1out.getParticipants().contains(testplayer2out));
-    
+        assert(testtTournament1out.getParticipants().contains(testplayer2out));    
     }
 }

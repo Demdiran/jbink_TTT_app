@@ -7,8 +7,6 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
-import nl.sogyo.ttt_app.domain.*;
-
 class DatabaseAccessor{
 	private Session hibernateSession;
 	public static SessionFactory buildSessionFactory(String settings) {
@@ -35,17 +33,17 @@ class DatabaseAccessor{
 		this.hibernateSession = hibernateSession;
 	}
 
-	public void dispose(){
+	public void closeSession(){
 		if(hibernateSession.isOpen()){
 			hibernateSession.close();
 		}
 	}
 	
-	public Player getPlayer(int ID){
-		Player player = null;
+	public IStorable getFromDB(int ID, Class<?> typeToGet){
+		IStorable toGet = null;
         try {
 			hibernateSession.beginTransaction();
-			player = hibernateSession.get(Player.class, ID);
+			toGet = (IStorable) hibernateSession.get(typeToGet, ID);
 			hibernateSession.getTransaction().commit();            
         } catch (Exception sqlException) {
 			if (null != hibernateSession.getTransaction()) {
@@ -54,13 +52,13 @@ class DatabaseAccessor{
 			}
 			sqlException.printStackTrace();
 		}
-		return player;
+		return toGet;
 	}
 
-	public void persistPlayer(Player player){
+	public void createInDB(IStorable toCreate){
 		try {
 			hibernateSession.beginTransaction();
-			hibernateSession.persist(player);
+			hibernateSession.persist(toCreate);
 			hibernateSession.getTransaction().commit();
 		} catch (Exception sqlException) {
 			if (null != hibernateSession.getTransaction()) {
@@ -71,10 +69,10 @@ class DatabaseAccessor{
 		}
 	}
 
-	public void removePlayer(int ID){
+	public void updateInDB(IStorable toUpdate){
 		try {
 			hibernateSession.beginTransaction();
-			hibernateSession.delete(hibernateSession.get(Player.class, ID));
+			hibernateSession.merge(toUpdate);
 			hibernateSession.getTransaction().commit();
 		} catch (Exception sqlException) {
 			if (null != hibernateSession.getTransaction()) {
@@ -85,26 +83,10 @@ class DatabaseAccessor{
 		}
 	}
 
-	public Tournament getTournament(int ID){
-		Tournament tournament = null;
-        try {
-			hibernateSession.beginTransaction();
-			tournament = hibernateSession.get(Tournament.class, ID);
-			hibernateSession.getTransaction().commit();            
-        } catch (Exception sqlException) {
-			if (null != hibernateSession.getTransaction()) {
-				System.out.println("\n.......Transaction Is Being Rolled Back.......");
-				hibernateSession.getTransaction().rollback();
-			}
-			sqlException.printStackTrace();
-		}
-		return tournament;
-	}
-
-	public void mergeTournament(Tournament tournament){
+	public void removeFromDB(int ID, Class<?> toRemove){
 		try {
 			hibernateSession.beginTransaction();
-			hibernateSession.merge(tournament);
+			hibernateSession.delete(hibernateSession.get(toRemove, ID));
 			hibernateSession.getTransaction().commit();
 		} catch (Exception sqlException) {
 			if (null != hibernateSession.getTransaction()) {

@@ -14,9 +14,11 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import nl.sogyo.ttt_app.api.IStorable;
+
 @Entity(name = "player")
 @Table(name = "players")
-public class Player{
+public class Player implements IStorable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "player_ID")
@@ -47,8 +49,8 @@ public class Player{
     public int getID(){
         return player_ID;
     }
-    public void setID(int id){
-        this.player_ID = id;
+    public void setID(int ID){
+        this.player_ID = ID;
     }
     public int getRating(){
         return rating;
