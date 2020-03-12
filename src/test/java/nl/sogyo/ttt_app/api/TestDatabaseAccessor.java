@@ -93,4 +93,18 @@ public class TestDatabaseAccessor{
         assert(testplayer1out.getTournaments().contains(testtTournament2out));
         assert(testtTournament1out.getParticipants().contains(testplayer2out));    
     }
+
+    @Test
+    public void TestCreateNewPlayer(){
+        Player testplayer = databaseAccessor.getOrCreatePlayer("testID");
+        assert(testplayer != null);
+    }
+
+    @Test
+    public void TestObtainexistingPlayerFromOutsideKey(){
+        Player testplayer = databaseAccessor.getOrCreatePlayer("testID");
+        hibernateSession.clear();
+        Player testplayer2 = databaseAccessor.getOrCreatePlayer("testID");
+        assertEquals(testplayer.getID(), testplayer2.getID());
+    }
 }

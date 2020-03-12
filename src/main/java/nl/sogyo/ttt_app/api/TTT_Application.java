@@ -23,9 +23,10 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
 
 	@GetMapping("/user")
 	public Player user(@AuthenticationPrincipal OAuth2User principal) {
-		Player response = new Player();
-		response.setName(principal.getName());
-		return response;
+		String outside_ID = principal.getName();
+		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
+		Player user = databaseAccessor.getOrCreatePlayer(outside_ID);
+		return user;
 	}
 
 	public static void main(String[] args) {

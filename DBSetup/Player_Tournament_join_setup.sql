@@ -1,5 +1,5 @@
 use ttt_db;
-create table `player_tournament`(
+create table `player_tournament_join`(
 `tournament_ID`		int unsigned not null,
 `player_ID`			int unsigned not null,
 primary key(`tournament_ID`, `player_ID`),

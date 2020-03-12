@@ -68,7 +68,6 @@
                 async login(){
                     console.log("logging in");
                     var cookie = this.getCookie("XSRF-TOKEN");
-                    console.log(cookie);
                     const response = await fetch("/user", {
                         method: 'GET',
                         headers: {
@@ -79,6 +78,7 @@
                     if(response.status != 401){
                         const user = await response.json();
                         this.user = user;
+                        console.log(user);
                     }
                 },
                 async logout(){
