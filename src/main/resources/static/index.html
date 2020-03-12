@@ -12,13 +12,12 @@
 </head>
 <body>
     <div id="app">
-        <h1>Demo</h1>
         <template v-if="!loggedin">
             <loginscreen v-on:logging-in="login"></loginscreen>
-            <!-- <loginbutton v-on:logging-in="login"></loginbutton> -->
         </template>
         <template v-else>
-            <authorizedview v-bind:user="user"></authorizedview>
+            <authorizedview v-bind:user="user" v-bind:editingprofile="editingprofile" v-on:edit-profile="editingprofile=true"></authorizedview>           
+            <profileeditor v-if="editingprofile" v-bind:user="user" v-on:change-profile-information="editprofile"></profileeditor>
             <logoutbutton v-on:log-out="logout"></logoutbutton>
         </template>
 
@@ -28,13 +27,13 @@
           Vue.component('loginscreen', {
             template: `
             <div class="unauthenticated">
-                With Google: <a href="/oauth2/authorization/google">click here</a>
+                Log in with Google: <a href="/oauth2/authorization/google">click here</a>
             </div>
             `
           });
           Vue.component('logoutbutton', {
             template: `
-                <div v-on:click="logout">log out</div>
+                <div v-on:click="logout" id="logoutbutton">log out</div>
             `,
             methods: {
                 logout(){
@@ -42,18 +41,55 @@
                 }
             }
           });
+            Vue.component('profileeditor', {
+                props: [ 'user' ],
+                data() {
+                    return {
+                        username: undefined,
+                        useradress: undefined,
+                    }
+                },
+                template: `
+                    <div class="informationcolumn">
+                        <ul>
+                            <li>Name: <input v-bind:placeholder="user.name" v-model="username"/></li>
+                            <li>Rating: {{user.rating}}</li>
+                            <li>Adress: <input v-bind:placeholder="user.adress" v-model="useradress" /></li>
+                            <li>Tournaments: {{user.tournaments}}</li>
+                        </ul>
+                        <button v-on:click="submit">Submit</button>
+                    </div>
+                `,
+                methods: {
+                    submit(){
+                        this.$emit('change-profile-information', this.username, this.useradress);
+                    }
+                }
+            });
           Vue.component('authorizedview', {
-              props: [ 'user' ],
+              props: [ 'user', 'editingprofile'],
               template: `
-                <div>
-                    You are logged in as {{user.name}}.
+                <div class="informationcolumn">
+                    <ul>
+                        <li>Name: {{user.name}}</li>
+                        <li>Rating: {{user.rating}}</li>
+                        <li>Adress: {{user.adress}}</li>
+                        <li>Tournaments: {{user.tournaments}}</li>
+                    </ul>
+                    <button v-if="!editingprofile" v-on:click="edit">Edit</button>
                 </div>
-              `
+              `,
+              methods: {
+                  edit(){
+                      this.$emit('edit-profile');
+                  }
+              }
           });
           const app = new Vue({
             el: "#app",
             data:{
                 user : undefined,
+                editingprofile : false
             },
             computed: {
                 loggedin(){
@@ -91,6 +127,20 @@
                     });
                     this.user = undefined;
                 },
+                async editprofile(username, useradress){
+                    this.user.name = username;
+                    this.user.adress = useradress;
+                    this.editingprofile = false;
+                    var cookie = this.getCookie("XSRF-TOKEN");
+                    const response = await fetch("/editprofile", {
+                        method: 'POST',
+                        headers: {
+                            'X-XSRF-TOKEN': cookie,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(this.user)
+                    });
+                },
                 getCookie(cname) {
                     var name = cname + "=";
                     var decodedCookie = decodeURIComponent(document.cookie);
@@ -106,7 +156,6 @@
                     }
                     return "";
                 }
-
             }
 
           })

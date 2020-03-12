@@ -32,7 +32,7 @@ public class Player implements IStorable{
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
-        name = "player_tournament",
+        name = "player_tournament_join",
         joinColumns = { @JoinColumn(name = "player_ID")},
         inverseJoinColumns = { @JoinColumn(name = "tournament_ID")}
     )

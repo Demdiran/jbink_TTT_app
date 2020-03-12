@@ -13,6 +13,8 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import nl.sogyo.ttt_app.domain.*;
@@ -27,6 +29,12 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
 		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
 		Player user = databaseAccessor.getOrCreatePlayer(outside_ID);
 		return user;
+	}
+
+	@PostMapping("/editprofile")
+	public void editprofile(@AuthenticationPrincipal OAuth2User principal, @RequestBody Player user){
+		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
+		databaseAccessor.updateInDB(user);
 	}
 
 	public static void main(String[] args) {

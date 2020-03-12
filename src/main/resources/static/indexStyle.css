@@ -4,3 +4,22 @@ html {
   *, *:before, *:after {
     box-sizing: inherit;
   }
+
+#logoutbutton{
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  background-color: aqua;
+  border-style: solid;
+}
+
+#logoutbutton:hover{
+  background-color: cornflowerblue;
+}
+
+.informationcolumn{
+  width: 32%;
+  border-style: solid;
+  border-width: thin;
+  border-color: slategray;
+}
