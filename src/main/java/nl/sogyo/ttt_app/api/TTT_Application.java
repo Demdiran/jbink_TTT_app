@@ -19,7 +19,7 @@ import nl.sogyo.ttt_app.domain.*;
 
 @SpringBootApplication
 @RestController
-public class TTT_Application /*extends WebSecurityConfigurerAdapter*/{
+public class TTT_Application extends WebSecurityConfigurerAdapter{
 
 	@GetMapping("/user")
 	public Player user(@AuthenticationPrincipal OAuth2User principal) {
@@ -32,25 +32,25 @@ public class TTT_Application /*extends WebSecurityConfigurerAdapter*/{
 		SpringApplication.run(TTT_Application.class, args);
 	}
 	
-    // @Override
-    // protected void configure(HttpSecurity http) throws Exception {
-    // 	// @formatter:off
-    //     http
-    //         .authorizeRequests(a -> a
-    //             .antMatchers("/", "/error", "/webjars/**").permitAll()
-    //             .anyRequest().authenticated()
-    //         )
-    //         .exceptionHandling(e -> e
-    //             .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
-    //         )
-	// 		.logout(l -> l
-	// 			.logoutSuccessUrl("/").permitAll()
-	// 		)
-	// 		.csrf(c -> c
-	// 			.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-	// 		)
-    //         .oauth2Login();
-    //     // @formatter:on
-    // }
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+    	// @formatter:off
+        http
+            .authorizeRequests(a -> a
+                .antMatchers("/", "/error", "/indexStyle.css").permitAll()
+                .anyRequest().authenticated()
+            )
+			.logout(l -> l
+				.logoutSuccessUrl("/").permitAll()
+			)
+			.csrf(c -> c
+				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+			)
+            .exceptionHandling(e -> e
+                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+            )
+            .oauth2Login();
+        // @formatter:on
+    }
 
 }

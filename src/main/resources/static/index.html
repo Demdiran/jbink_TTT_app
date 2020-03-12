@@ -7,29 +7,40 @@
     <meta name="description" content=""/>
     <meta name="viewport" content="width=device-width"/>
     <base href="/"/>
-    <link rel="stylesheet" type="text/css" href="indexStyle.css"/>
+    <link rel="stylesheet" href="indexStyle.css">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 <body>
     <div id="app">
         <h1>Demo</h1>
-        <loginscreen v-if="!loggedin" v-on:logging-in="login"></loginscreen>
-        <authorizedview  v-else v-bind:user="user"></authorizedview>
+        <template v-if="!loggedin">
+            <loginscreen v-on:logging-in="login"></loginscreen>
+            <!-- <loginbutton v-on:logging-in="login"></loginbutton> -->
+        </template>
+        <template v-else>
+            <authorizedview v-bind:user="user"></authorizedview>
+            <logoutbutton v-on:log-out="logout"></logoutbutton>
+        </template>
 
     </div>
 
       <script>
           Vue.component('loginscreen', {
-              template: `
-                <div class="unauthenticated" v-on:click="login">
-                    With Google: <a href="/oauth2/authorization/google">click here</a>
-                </div>
-              `,
-              methods: {
-                  login(){
-                      this.$emit('logging-in');
-                  }
-              }
+            template: `
+            <div class="unauthenticated">
+                With Google: <a href="/oauth2/authorization/google">click here</a>
+            </div>
+            `
+          });
+          Vue.component('logoutbutton', {
+            template: `
+                <div v-on:click="logout">log out</div>
+            `,
+            methods: {
+                logout(){
+                    this.$emit('log-out');
+                }
+            }
           });
           Vue.component('authorizedview', {
               props: [ 'user' ],
@@ -40,29 +51,63 @@
               `
           });
           const app = new Vue({
-              el: "#app",
-              data:{
-                  user : undefined,
-              },
-              computed: {
-                  loggedin(){
-                      return this.user != undefined;
-                  }
-              },
-              methods: {
-                  async login(){
-                      console.log("logging in");
-                      const response = await fetch("/user", {
-                          method: 'GET',
-                          headers: {
-                              'Accept' : 'application/json'
-                          }
-                      });
-                      const user = await response.json();
-                      this.user = user;
-                  }
+            el: "#app",
+            data:{
+                user : undefined,
+            },
+            computed: {
+                loggedin(){
+                    return this.user != undefined;
+                }
+            },
+            created:
+                function () {
+                    this.login();
+            },
+            methods: {
+                async login(){
+                    console.log("logging in");
+                    var cookie = this.getCookie("XSRF-TOKEN");
+                    console.log(cookie);
+                    const response = await fetch("/user", {
+                        method: 'GET',
+                        headers: {
+                            'Accept' : 'application/json',
+                            'X-XSRF-TOKEN': cookie
+                        }
+                    });
+                    if(response.status != 401){
+                        const user = await response.json();
+                        this.user = user;
+                    }
+                },
+                async logout(){
+                    var cookie = this.getCookie("XSRF-TOKEN");
+                    const response = await fetch("/logout", {
+                        method: 'POST',
+                        headers: {
+                            'X-XSRF-TOKEN': cookie
+                        }
+                    });
+                    this.user = undefined;
+                },
+                getCookie(cname) {
+                    var name = cname + "=";
+                    var decodedCookie = decodeURIComponent(document.cookie);
+                    var ca = decodedCookie.split(';');
+                    for(var i = 0; i <ca.length; i++) {
+                        var c = ca[i];
+                        while (c.charAt(0) == ' ') {
+                        c = c.substring(1);
+                        }
+                        if (c.indexOf(name) == 0) {
+                        return c.substring(name.length, c.length);
+                        }
+                    }
+                    return "";
+                }
 
-              }
+            }
 
           })
       </script>
