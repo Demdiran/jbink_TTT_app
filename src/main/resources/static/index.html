@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>Demo</title>
+    <meta name="description" content=""/>
+    <meta name="viewport" content="width=device-width"/>
+    <base href="/"/>
+    <link rel="stylesheet" type="text/css" href="indexStyle.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <h1>Demo</h1>
+        <loginscreen v-if="!loggedin" v-on:logging-in="login"></loginscreen>
+        <authorizedview  v-else v-bind:user="user"></authorizedview>
+
+    </div>
+
+      <script>
+          Vue.component('loginscreen', {
+              template: `
+                <div class="unauthenticated" v-on:click="login">
+                    With Google: <a href="/oauth2/authorization/google">click here</a>
+                </div>
+              `,
+              methods: {
+                  login(){
+                      this.$emit('logging-in');
+                  }
+              }
+          });
+          Vue.component('authorizedview', {
+              props: [ 'user' ],
+              template: `
+                <div>
+                    You are logged in as {{user.name}}.
+                </div>
+              `
+          });
+          const app = new Vue({
+              el: "#app",
+              data:{
+                  user : undefined,
+              },
+              computed: {
+                  loggedin(){
+                      return this.user != undefined;
+                  }
+              },
+              methods: {
+                  async login(){
+                      console.log("logging in");
+                      const response = await fetch("/user", {
+                          method: 'GET',
+                          headers: {
+                              'Accept' : 'application/json'
+                          }
+                      });
+                      const user = await response.json();
+                      this.user = user;
+                  }
+
+              }
+
+          })
+      </script>
+</body>
+</html>

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import nl.sogyo.ttt_app.domain.*;
+
 public class TestDatabaseAccessor{
     Session hibernateSession;
     DatabaseAccessor databaseAccessor;
