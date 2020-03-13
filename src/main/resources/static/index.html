@@ -20,6 +20,7 @@
             <profileeditor v-if="editingprofile" v-bind:user="user" v-on:change-profile-information="editprofile"></profileeditor>
             <logoutbutton v-on:log-out="logout"></logoutbutton>
         </template>
+        <tournamentlist v-bind:tournaments="tournaments" id="tournamentlist"></tournamentlist>
 
     </div>
 
@@ -76,7 +77,7 @@
                         <li>Adress: {{user.adress}}</li>
                         <li>Tournaments: {{user.tournaments}}</li>
                     </ul>
-                    <button v-if="!editingprofile" v-on:click="edit">Edit</button>
+                    <button v-if="!editingprofile" v-on:click="edit">Edit profile</button>
                 </div>
               `,
               methods: {
@@ -85,10 +86,24 @@
                   }
               }
           });
+          Vue.component('tournamentlist', {
+            props: [ 'tournaments' ],
+            template: `
+                <div class="informationcolumn">
+                    <ul>
+                        <li 
+                            v-for="tournament in tournaments">
+                            {{tournament.name}} ({{tournament.vereniging}})
+                        </li>
+                    </ul>
+                </div>
+            `
+          });
           const app = new Vue({
             el: "#app",
             data:{
                 user : undefined,
+                tournaments : undefined,
                 editingprofile : false
             },
             computed: {
@@ -98,6 +113,7 @@
             },
             created:
                 function () {
+                    this.getTournaments();
                     this.login();
             },
             methods: {
@@ -140,6 +156,15 @@
                         },
                         body: JSON.stringify(this.user)
                     });
+                },
+                async getTournaments(){
+                    const response = await fetch("/tournaments", {
+                        method: "GET",
+                        headers: {
+                            'Accept' : 'application/json'
+                        }
+                    });
+                    this.tournaments = response.json();
                 },
                 getCookie(cname) {
                     var name = cname + "=";

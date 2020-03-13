@@ -22,6 +22,8 @@ public class Tournament implements IStorable{
     private int tournamentID;
     @Column(name = "tournament_name")
     private String name;
+    @Column(name = "vereniging")
+    private String vereniging;
     @Column(name = "adress")
     private String adress;
     @Column(name = "date")
@@ -51,6 +53,12 @@ public class Tournament implements IStorable{
     }
     public void setName(String name){
         this.name = name;
+    }
+    public String getVereniging() {
+        return vereniging;
+    }
+    public void setVereniging(String vereniging) {
+        this.vereniging = vereniging;
     }
     public String getAdress(){
         return adress;
