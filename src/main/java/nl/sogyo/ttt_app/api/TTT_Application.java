@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.crypto.Data;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
@@ -39,6 +41,14 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
 		List<Tournament> response = databaseAccessor.getAllFromDB(Tournament.class);
 		databaseAccessor.closeSession();
 		return response;
+	}
+
+	@PostMapping("/createTournament")
+	public Tournament createTournament(@AuthenticationPrincipal OAuth2User principal, @RequestBody Tournament tournament){
+		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
+		databaseAccessor.createInDB(tournament);
+		databaseAccessor.closeSession();
+		return tournament;
 	}
 
 	@PostMapping("/editprofile")

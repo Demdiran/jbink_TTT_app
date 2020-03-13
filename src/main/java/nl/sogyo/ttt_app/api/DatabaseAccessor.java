@@ -73,7 +73,7 @@ class DatabaseAccessor{
 		return result;
 	}
 
-	public <T> List<T> getAllFromDB(Class<T> typeToGet){
+	public <T extends IStorable> List<T> getAllFromDB(Class<T> typeToGet){
 		List<T> toGet = null;
         try {
 			hibernateSession.beginTransaction();
@@ -92,11 +92,11 @@ class DatabaseAccessor{
 		return toGet;
 	}
 	
-	public IStorable getFromDB(int ID, Class<?> typeToGet){
+	public <T extends IStorable> IStorable getFromDB(int ID, Class<T> typeToGet){
 		IStorable toGet = null;
         try {
 			hibernateSession.beginTransaction();
-			toGet = (IStorable) hibernateSession.get(typeToGet, ID);
+			toGet = hibernateSession.get(typeToGet, ID);
 			hibernateSession.getTransaction().commit();            
         } catch (Exception sqlException) {
 			if (null != hibernateSession.getTransaction()) {
@@ -126,20 +126,6 @@ class DatabaseAccessor{
 		try {
 			hibernateSession.beginTransaction();
 			hibernateSession.merge(toUpdate);
-			hibernateSession.getTransaction().commit();
-		} catch (Exception sqlException) {
-			if (null != hibernateSession.getTransaction()) {
-				System.out.println("\n.......Transaction Is Being Rolled Back.......");
-				hibernateSession.getTransaction().rollback();
-			}
-			sqlException.printStackTrace();
-		}
-	}
-
-	public void removeFromDB(int ID, Class<?> toRemove){
-		try {
-			hibernateSession.beginTransaction();
-			hibernateSession.delete(hibernateSession.get(toRemove, ID));
 			hibernateSession.getTransaction().commit();
 		} catch (Exception sqlException) {
 			if (null != hibernateSession.getTransaction()) {

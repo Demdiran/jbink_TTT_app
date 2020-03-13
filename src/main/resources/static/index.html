@@ -16,23 +16,38 @@
             <loginscreen v-on:logging-in="login"></loginscreen>
         </template>
         <template v-else>
-            <authorizedview v-bind:user="user" v-bind:editingprofile="editingprofile" v-on:edit-profile="editingprofile=true"></authorizedview>           
-            <profileeditor v-if="editingprofile" v-bind:user="user" v-on:change-profile-information="editprofile"></profileeditor>
-            <logoutbutton v-on:log-out="logout"></logoutbutton>
+            <authorizedview 
+                v-bind:user="user" 
+                v-bind:editingprofile="editingprofile" 
+                v-on:edit-profile="editingprofile=true">
+            </authorizedview>           
+            <profileeditor 
+                v-if="editingprofile" 
+                v-bind:user="user" 
+                v-on:change-profile-information="editprofile">
+            </profileeditor>
+            <logoutbutton 
+                v-on:log-out="logout">
+            </logoutbutton>
         </template>
-        <tournamentlist v-bind:tournaments="tournaments" id="tournamentlist"></tournamentlist>
-
+        <tournamentlist
+            id="tournamentlist" 
+            v-bind:tournaments="tournaments"
+            v-bind:loggedin="loggedin" 
+            v-on:create-tournament="creatingtournament=true">
+        </tournamentlist>
+        <tournamentcreator v-if="creatingtournament" v-on:create-tournament="createtournament"></tournamentcreator>
     </div>
 
       <script>
-          Vue.component('loginscreen', {
+        Vue.component('loginscreen', {
             template: `
-            <div class="unauthenticated">
-                Log in with Google: <a href="/oauth2/authorization/google">click here</a>
-            </div>
+                <div class="unauthenticated">
+                    Log in with Google: <a href="/oauth2/authorization/google">click here</a>
+                </div>
             `
-          });
-          Vue.component('logoutbutton', {
+        });
+        Vue.component('logoutbutton', {
             template: `
                 <div v-on:click="logout" id="logoutbutton">log out</div>
             `,
@@ -41,53 +56,80 @@
                     this.$emit('log-out');
                 }
             }
-          });
-            Vue.component('profileeditor', {
-                props: [ 'user' ],
-                data() {
-                    return {
-                        username: undefined,
-                        useradress: undefined,
-                    }
-                },
-                template: `
-                    <div class="informationcolumn">
-                        <ul>
-                            <li>Name: <input v-bind:placeholder="user.name" v-model="username"/></li>
-                            <li>Rating: {{user.rating}}</li>
-                            <li>Adress: <input v-bind:placeholder="user.adress" v-model="useradress" /></li>
-                            <li>Tournaments: {{user.tournaments}}</li>
-                        </ul>
-                        <button v-on:click="submit">Submit</button>
-                    </div>
-                `,
-                methods: {
-                    submit(){
-                        this.$emit('change-profile-information', this.username, this.useradress);
-                    }
+        });
+        Vue.component('profileeditor', {
+            props: [ 'user' ],
+            data() {
+                return {
+                    username: undefined,
+                    useradress: undefined,
                 }
-            });
-          Vue.component('authorizedview', {
-              props: [ 'user', 'editingprofile'],
-              template: `
+            },
+            template: `
                 <div class="informationcolumn">
                     <ul>
-                        <li>Name: {{user.name}}</li>
+                        <li>Name: <input v-bind:placeholder="user.name" v-model="username"/></li>
                         <li>Rating: {{user.rating}}</li>
-                        <li>Adress: {{user.adress}}</li>
+                        <li>Adress: <input v-bind:placeholder="user.adress" v-model="useradress" /></li>
                         <li>Tournaments: {{user.tournaments}}</li>
                     </ul>
-                    <button v-if="!editingprofile" v-on:click="edit">Edit profile</button>
+                    <button v-on:click="submit">Submit</button>
                 </div>
-              `,
-              methods: {
-                  edit(){
-                      this.$emit('edit-profile');
-                  }
-              }
-          });
-          Vue.component('tournamentlist', {
-            props: [ 'tournaments' ],
+            `,
+            methods: {
+                submit(){
+                    this.$emit('change-profile-information', this.username, this.useradress);
+                }
+            }
+        });
+        Vue.component('tournamentcreator', {
+            data(){
+                return {
+                    name: "",
+                    club: "",
+                    adress: "",
+                    date: "",
+                    maxParticipants: "",
+                }
+            },
+            template: `
+                <div class="informationcolumn">
+                    <ul>
+                        <li><input v-model="name" placeholder="Tournament name" /></li>
+                        <li><input v-model="club" placeholder="Club" /></li>
+                        <li><input v-model="adress" placeholder="Adress" /></li>
+                        <li><input v-model="maxParticipants" placeholder="Maximum number of participants" /></li>
+                    </ul>
+                    <button v-on:click="submit">Submit</button>
+                </div>
+            `,
+            methods: {
+                submit(){
+                    this.$emit('create-tournament', this.name, this.club, this.adress, this.maxParticipants);
+                }
+            }
+        });
+        Vue.component('authorizedview', {
+            props: [ 'user', 'editingprofile'],
+            template: `
+            <div class="informationcolumn">
+                <ul>
+                    <li>Name: {{user.name}}</li>
+                    <li>Rating: {{user.rating}}</li>
+                    <li>Adress: {{user.adress}}</li>
+                    <li>Tournaments: {{user.tournaments}}</li>
+                </ul>
+                <button v-if="!editingprofile" v-on:click="edit">Edit profile</button>
+            </div>
+            `,
+            methods: {
+                edit(){
+                    this.$emit('edit-profile');
+                }
+            }
+        });
+        Vue.component('tournamentlist', {
+            props: [ 'tournaments', 'loggedin' ],
             template: `
                 <div class="informationcolumn">
                     <ul>
@@ -96,15 +138,22 @@
                             {{tournament.name}} ({{tournament.club}})
                         </li>
                     </ul>
+                    <button v-on:click="createtournament" v-if="loggedin">New tournament</button>
                 </div>
-            `
-          });
+            `,
+            methods: {
+                createtournament(){
+                    this.$emit('create-tournament');
+                }
+            }
+        });
           const app = new Vue({
             el: "#app",
             data:{
                 user : undefined,
                 tournaments : undefined,
-                editingprofile : false
+                editingprofile : false,
+                creatingtournament : false
             },
             computed: {
                 loggedin(){
@@ -167,6 +216,22 @@
                     const tournaments = await response.json();
                     console.log(tournaments);
                     this.tournaments = tournaments;
+                },
+                async createtournament(name, club, adress, maxParticipants){
+                    this.creatingtournament = false;
+                    var cookie = this.getCookie("XSRF-TOKEN");
+                    const response = await fetch("/createTournament", {
+                        method: "POST",
+                        headers: {
+                            'X-XSRF-TOKEN': cookie,
+                            'Accept' : 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({name: name, club: club, adress: adress, maxParticipants: maxParticipants})
+                    });
+                    tournament = await response.json();
+                    this.tournaments.push(tournament);
+
                 },
                 getCookie(cname) {
                     var name = cname + "=";
