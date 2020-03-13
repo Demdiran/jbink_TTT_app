@@ -31,7 +31,7 @@ public class Player implements IStorable{
     @Column(name = "player_adress")
     private String adress;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
         name = "player_tournament_join",
         joinColumns = { @JoinColumn(name = "player_ID")},

@@ -32,7 +32,7 @@ public class Tournament implements IStorable{
     @Column(name = "max_participants")
     private int maxParticipants;
 
-    @ManyToMany(mappedBy = "tournaments")
+    @ManyToMany(mappedBy = "tournaments", fetch = FetchType.EAGER)
     private Set<Player> participants = new HashSet<Player>();
 
     public Tournament(){
