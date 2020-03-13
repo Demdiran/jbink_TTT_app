@@ -20,8 +20,10 @@ html {
 
 #tournamentlist{
   position: absolute;
+  top: 0px;
   left: 33%;
-  height: 100%;
+  top: 0px;
+  height: 97%;
 }
 
 .informationcolumn{
@@ -29,4 +31,5 @@ html {
   border-style: solid;
   border-width: thin;
   border-color: slategray;
+  margin: 1%;
 }

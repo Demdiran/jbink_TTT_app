@@ -1,6 +1,7 @@
 package nl.sogyo.ttt_app.api;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.boot.SpringApplication;
@@ -27,14 +28,23 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
 	public Player user(@AuthenticationPrincipal OAuth2User principal) {
 		String outside_ID = principal.getName();
 		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
-		Player user = databaseAccessor.getOrCreatePlayer(outside_ID);
+		Player user = databaseAccessor.getOrCreatePlayerWithOutsideID(outside_ID);
 		return user;
+	}
+
+	@GetMapping("/tournaments")
+	public List<Tournament> tournaments(){
+		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
+		List<Tournament> response = databaseAccessor.getAllFromDB(Tournament.class);
+		databaseAccessor.closeSession();
+		return response;
 	}
 
 	@PostMapping("/editprofile")
 	public void editprofile(@AuthenticationPrincipal OAuth2User principal, @RequestBody Player user){
 		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
 		databaseAccessor.updateInDB(user);
+		databaseAccessor.closeSession();
 	}
 
 	public static void main(String[] args) {
@@ -46,7 +56,7 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
     	// @formatter:off
         http
             .authorizeRequests(a -> a
-                .antMatchers("/", "/error", "/indexStyle.css").permitAll()
+                .antMatchers("/", "/error", "/indexStyle.css", "/tournaments").permitAll()
                 .anyRequest().authenticated()
             )
 			.logout(l -> l

@@ -2,6 +2,8 @@ package nl.sogyo.ttt_app.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.List;
+
 import org.hibernate.Session;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -96,15 +98,43 @@ public class TestDatabaseAccessor{
 
     @Test
     public void TestCreateNewPlayer(){
-        Player testplayer = databaseAccessor.getOrCreatePlayer("testID");
+        Player testplayer = databaseAccessor.getOrCreatePlayerWithOutsideID("testID");
         assert(testplayer != null);
     }
 
     @Test
     public void TestObtainexistingPlayerFromOutsideKey(){
-        Player testplayer = databaseAccessor.getOrCreatePlayer("testID");
+        Player testplayer = databaseAccessor.getOrCreatePlayerWithOutsideID("testID");
         hibernateSession.clear();
-        Player testplayer2 = databaseAccessor.getOrCreatePlayer("testID");
+        Player testplayer2 = databaseAccessor.getOrCreatePlayerWithOutsideID("testID");
         assertEquals(testplayer.getID(), testplayer2.getID());
+    }
+
+    @Test
+    public void TestGetAllPlayersFromDB(){
+        Player player1 = databaseAccessor.getOrCreatePlayerWithOutsideID("player1");
+        Player player2 = databaseAccessor.getOrCreatePlayerWithOutsideID("player2");
+        Player player3 = databaseAccessor.getOrCreatePlayerWithOutsideID("player3");
+        List<Player> players = databaseAccessor.getAllFromDB(Player.class);
+        assertEquals(player1.getID(), players.get(0).getID());
+        assertEquals(player2.getID(), players.get(1).getID());
+        assertEquals(player3.getID(), players.get(2).getID());
+    }
+
+    @Test
+    public void TestGetAllTournamentsFromDB(){
+        Tournament tournament1 = new Tournament();
+        tournament1.setName("tournament1");
+        databaseAccessor.createInDB(tournament1);
+        Tournament tournament2 = new Tournament();
+        tournament2.setName("tournament2");
+        databaseAccessor.createInDB(tournament2);
+        Tournament tournament3 = new Tournament();
+        tournament3.setName("tournament3");
+        databaseAccessor.createInDB(tournament3);
+        List<Tournament> tournaments = databaseAccessor.getAllFromDB(Tournament.class);
+        assertEquals(tournament1.getID(), tournaments.get(0).getID());
+        assertEquals(tournament2.getID(), tournaments.get(1).getID());
+        assertEquals(tournament3.getID(), tournaments.get(2).getID());
     }
 }

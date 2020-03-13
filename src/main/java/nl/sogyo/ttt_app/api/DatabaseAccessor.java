@@ -1,5 +1,10 @@
 package nl.sogyo.ttt_app.api;
 
+import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
@@ -41,7 +46,7 @@ class DatabaseAccessor{
 		}
 	}
 
-	public Player getOrCreatePlayer(String outside_ID){
+	public Player getOrCreatePlayerWithOutsideID(String outside_ID){
 		Player result = null;
         try {
 			hibernateSession.beginTransaction();
@@ -66,6 +71,25 @@ class DatabaseAccessor{
 			sqlException.printStackTrace();
 		}
 		return result;
+	}
+
+	public <T> List<T> getAllFromDB(Class<T> typeToGet){
+		List<T> toGet = null;
+        try {
+			hibernateSession.beginTransaction();
+			CriteriaBuilder builder = hibernateSession.getCriteriaBuilder();
+			CriteriaQuery<T> criteria = builder.createQuery(typeToGet);
+			criteria.from(typeToGet);
+			toGet = hibernateSession.createQuery(criteria).getResultList();
+			hibernateSession.getTransaction().commit();            
+        } catch (Exception sqlException) {
+			if (null != hibernateSession.getTransaction()) {
+				System.out.println("\n.......Transaction Is Being Rolled Back.......");
+				hibernateSession.getTransaction().rollback();
+			}
+			sqlException.printStackTrace();
+		}
+		return toGet;
 	}
 	
 	public IStorable getFromDB(int ID, Class<?> typeToGet){
