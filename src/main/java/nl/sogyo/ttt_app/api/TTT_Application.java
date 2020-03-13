@@ -29,6 +29,7 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
 		String outside_ID = principal.getName();
 		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
 		Player user = databaseAccessor.getOrCreatePlayerWithOutsideID(outside_ID);
+		databaseAccessor.closeSession();
 		return user;
 	}
 
