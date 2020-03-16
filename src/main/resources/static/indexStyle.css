@@ -5,6 +5,11 @@ html {
     box-sizing: inherit;
   }
 
+ul{  
+  list-style-type: none;
+  padding: 0;
+}
+
 #logoutbutton{
   position: absolute;
   top: 0px;
@@ -26,10 +31,13 @@ html {
   height: 97%;
 }
 
-.informationcolumn{
-  width: 32%;
+.informationbox, .informationcolumn{
   border-style: solid;
   border-width: thin;
   border-color: slategray;
   margin: 1%;
+}
+
+.informationcolumn{
+  width: 32%;
 }

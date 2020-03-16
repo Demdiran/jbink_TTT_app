@@ -115,10 +115,12 @@
             template: `
             <div class="informationcolumn">
                 <ul>
-                    <li>Name: {{user.name}}</li>
-                    <li>Rating: {{user.rating}}</li>
-                    <li>Adress: {{user.adress}}</li>
-                    <li>Tournaments: {{user.tournaments}}</li>
+                    <div class="informationbox">
+                        <li>Name: {{user.name}}</li>
+                        <li>Rating: {{user.rating}}</li>
+                        <li>Adress: {{user.adress}}</li>
+                        <li>Tournaments: {{user.tournaments}}</li>
+                    </div>
                 </ul>
                 <button v-if="!editingprofile" v-on:click="edit">Edit profile</button>
             </div>
@@ -136,7 +138,12 @@
                     <ul>
                         <li 
                             v-for="tournament in tournaments">
-                            {{tournament.name}} ({{tournament.club}})
+                                <div class="informationbox">
+                                    {{tournament.club}}'s {{tournament.name}}</br>
+                                    Waar? {{tournament.adress}}</br>
+                                    Wanneer? {{tournament.tournamentDate}}</br>
+                                    Maximaal {{tournament.maxParticipants}} deelnemers
+                                </div>
                         </li>
                     </ul>
                     <button v-on:click="createtournament" v-if="loggedin">New tournament</button>
