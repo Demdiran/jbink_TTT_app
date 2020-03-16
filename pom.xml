@@ -60,7 +60,13 @@
 			<artifactId>javax.ws.rs-api</artifactId>
 			<version>${jaxrs.version}</version>
 		</dependency>
-    <!-- testing -->
+    <!-- LocationIQ -->
+    <dependency>
+      <groupId>com.locationiq</groupId>
+      <artifactId>locationiq-java-client</artifactId>
+      <version>1.1.0</version>
+      <scope>compile</scope>
+    </dependency>
     <!-- Other -->
     <dependency>
     <groupId>org.apache.commons</groupId>
