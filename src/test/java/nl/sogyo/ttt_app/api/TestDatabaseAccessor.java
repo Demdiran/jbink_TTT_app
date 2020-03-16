@@ -137,4 +137,25 @@ public class TestDatabaseAccessor{
         assertEquals(tournament2.getID(), tournaments.get(1).getID());
         assertEquals(tournament3.getID(), tournaments.get(2).getID());
     }
+
+    @Test
+    public void TestSignUpForTournament(){
+        Tournament tournament1 = new Tournament();
+        tournament1.setName("tournament1");
+        tournament1.setMaxParticipants(50);
+        tournament1.setClub("club1");
+        Player player1 = new Player();
+        player1.setName("player1");
+        player1.setRating(800);
+        databaseAccessor.createInDB(tournament1);
+        databaseAccessor.createInDB(player1);
+
+        player1.signUpForTournament(tournament1);
+        databaseAccessor.updateInDB(player1);
+
+        hibernateSession.clear();
+
+        assert(player1.getTournaments().contains(tournament1));
+        assert(tournament1.getParticipants().contains(player1));
+    }
 }

@@ -34,7 +34,8 @@
             id="tournamentlist" 
             v-bind:tournaments="tournaments"
             v-bind:loggedin="loggedin" 
-            v-on:create-tournament="creatingtournament=true">
+            v-on:create-tournament="creatingtournament=true"
+            v-on:sign-up="signUpForTournament">
         </tournamentlist>
         <tournamentcreator v-if="creatingtournament" v-on:create-tournament="createtournament"></tournamentcreator>
     </div>
@@ -71,7 +72,7 @@
                         <li>Name: <input v-bind:placeholder="user.name" v-model="username"/></li>
                         <li>Rating: {{user.rating}}</li>
                         <li>Adress: <input v-bind:placeholder="user.adress" v-model="useradress" /></li>
-                        <li>Tournaments: {{user.tournaments}}</li>
+                        <li>Tournaments: {{user.tournaments.map(tournament => tournament.name)}}</li>
                     </ul>
                     <button v-on:click="submit">Submit</button>
                 </div>
@@ -119,7 +120,7 @@
                         <li>Name: {{user.name}}</li>
                         <li>Rating: {{user.rating}}</li>
                         <li>Adress: {{user.adress}}</li>
-                        <li>Tournaments: {{user.tournaments}}</li>
+                        <li>Tournaments: {{user.tournaments.map(tournament => tournament.name)}}</li>
                     </div>
                 </ul>
                 <button v-if="!editingprofile" v-on:click="edit">Edit profile</button>
@@ -142,7 +143,8 @@
                                     {{tournament.club}}'s {{tournament.name}}</br>
                                     Waar? {{tournament.adress}}</br>
                                     Wanneer? {{tournament.tournamentDate}}</br>
-                                    Maximaal {{tournament.maxParticipants}} deelnemers
+                                    Maximaal {{tournament.maxParticipants}} deelnemers</br>
+                                    <div class="button" v-on:click="signup(tournament)">Sign up</div>
                                 </div>
                         </li>
                     </ul>
@@ -152,6 +154,9 @@
             methods: {
                 createtournament(){
                     this.$emit('create-tournament');
+                },
+                signup(tournament){
+                    this.$emit('sign-up', tournament);
                 }
             }
         });
@@ -222,11 +227,9 @@
                         }
                     });
                     const tournaments = await response.json();
-                    console.log(tournaments);
                     this.tournaments = tournaments;
                 },
                 async createtournament(name, club, adress, date, maxParticipants){
-                    console.log(date);
                     this.creatingtournament = false;
                     var cookie = this.getCookie("XSRF-TOKEN");
                     const response = await fetch("/createTournament", {
@@ -241,6 +244,20 @@
                     tournament = await response.json();
                     this.tournaments.push(tournament);
 
+                },
+                async signUpForTournament(tournament){
+                    console.log(tournament);
+                    var cookie = this.getCookie("XSRF-TOKEN");
+                    var response = await fetch("/signUpForTournament?tournamentID=" + tournament.tournamentID, {
+                        method: "POST",
+                        headers: {
+                            'X-XSRF-TOKEN': cookie,
+                            'Accept' : 'application/json'
+                        }
+                    });
+                    user = await response.json();
+                    this.user = user;
+                    this.getTournaments();
                 },
                 getCookie(cname) {
                     var name = cname + "=";

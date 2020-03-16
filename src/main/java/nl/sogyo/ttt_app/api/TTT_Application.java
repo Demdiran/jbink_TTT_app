@@ -1,5 +1,6 @@
 package nl.sogyo.ttt_app.api;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.boot.SpringApplication;
@@ -23,35 +24,57 @@ import nl.sogyo.ttt_app.domain.*;
 public class TTT_Application extends WebSecurityConfigurerAdapter{
 
 	@GetMapping("/user")
-	public Player user(@AuthenticationPrincipal OAuth2User principal) {
+	public PlayerResponse user(@AuthenticationPrincipal OAuth2User principal) {
 		String outside_ID = principal.getName();
 		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
 		Player user = databaseAccessor.getOrCreatePlayerWithOutsideID(outside_ID);
+		PlayerResponse response = new PlayerResponse(user);
+		response.setAdress(user.getAdress());
 		databaseAccessor.closeSession();
-		return user;
+		return response;
 	}
 
 	@GetMapping("/tournaments")
-	public List<Tournament> tournaments(){
+	public List<TournamentResponse> tournaments(){
 		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
-		List<Tournament> response = databaseAccessor.getAllFromDB(Tournament.class);
+		List<Tournament> tournaments = databaseAccessor.getAllFromDB(Tournament.class);
+		List<TournamentResponse> response = new ArrayList<TournamentResponse>();
+		for(Tournament tournament : tournaments){
+			response.add(new TournamentResponse(tournament));
+		}
 		databaseAccessor.closeSession();
 		return response;
 	}
 
 	@PostMapping("/createTournament")
-	public Tournament createTournament(@AuthenticationPrincipal OAuth2User principal, @RequestBody Tournament tournament){
+	public TournamentResponse createTournament(@AuthenticationPrincipal OAuth2User principal, @RequestBody Tournament tournament){
 		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
-		System.out.println(tournament.getTournamentDate());
 		databaseAccessor.createInDB(tournament);
 		databaseAccessor.closeSession();
-		return tournament;
+		return new TournamentResponse(tournament);
+	}
+
+	@PostMapping("/signUpForTournament")
+	public PlayerResponse signUpForTournament(@AuthenticationPrincipal OAuth2User principal, Integer tournamentID){
+		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
+		Player user = databaseAccessor.getOrCreatePlayerWithOutsideID(principal.getName());
+		Tournament tournament = (Tournament) databaseAccessor.getFromDB(tournamentID, Tournament.class);
+		user.signUpForTournament(tournament);
+		databaseAccessor.updateInDB(user);
+		databaseAccessor.closeSession();
+		PlayerResponse response = new PlayerResponse(user);
+		response.setAdress(user.getAdress());
+		return response;
 	}
 
 	@PostMapping("/editprofile")
-	public void editprofile(@AuthenticationPrincipal OAuth2User principal, @RequestBody Player user){
+	public void editprofile(@AuthenticationPrincipal OAuth2User principal, @RequestBody PlayerResponse user){
 		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
-		databaseAccessor.updateInDB(user);
+		Player player = (Player) databaseAccessor.getFromDB(user.getID(), Player.class);
+		player.setAdress(user.getAdress());
+		player.setName(user.getName());
+		player.setRating(user.getRating());
+		databaseAccessor.updateInDB(player);
 		databaseAccessor.closeSession();
 	}
 

@@ -41,3 +41,13 @@ ul{
 .informationcolumn{
   width: 32%;
 }
+
+.button{
+  background-color: aqua;
+  border-style: solid;
+  border-width: 2px;
+}
+
+.button:hover{
+  background-color: cornflowerblue;
+}
