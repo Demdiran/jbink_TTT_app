@@ -23,9 +23,11 @@ public class Game implements IStorable{
     private int pointsPlayer2;
 
     public Game(){
-        
+
     }
     public Game(int pointsPlayer1, int pointsPlayer2){
+        if(pointsPlayer1 < 0 || pointsPlayer2 < 0)
+            throw new IllegalArgumentException("Amount of points in a game must be non-negative");
         this.pointsPlayer1 = pointsPlayer1;
         this.pointsPlayer2 = pointsPlayer2;
     }
@@ -37,8 +39,18 @@ public class Game implements IStorable{
     public int getPointsPlayer1() {
         return pointsPlayer1;
     }
+    public void setPointsPlayer1(int pointsPlayer1) {
+        if(pointsPlayer1 < 0)
+            throw new IllegalArgumentException("Amount of points in a game must be non-negative");
+        this.pointsPlayer1 = pointsPlayer1;
+    }
     public int getPointsPlayer2() {
         return pointsPlayer2;
+    }
+    public void setPointsPlayer2(int pointsPlayer2) {
+        if(pointsPlayer2 < 0)
+            throw new IllegalArgumentException("Amount of points in a game must be non-negative");
+        this.pointsPlayer2 = pointsPlayer2;
     }
 
     public void pointForPlayer1(){

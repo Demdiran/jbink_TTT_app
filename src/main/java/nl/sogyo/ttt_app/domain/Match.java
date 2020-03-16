@@ -40,7 +40,6 @@ public class Match implements IStorable{
     private List<Game> games = new ArrayList<Game>();
 
     public Match(){
-
     }
 
     public Match(Player player1, Player player2){
@@ -55,8 +54,14 @@ public class Match implements IStorable{
     public Player getPlayer1() {
         return players[0];
     }
+    public void setPlayer1(Player player1){
+        players[0] = player1;
+    }
     public Player getPlayer2() {
         return players[1];
+    }
+    public void setPlayer2(Player player2){
+        players[1] = player2;
     }
     public List<Game> getGames() {
         return games;
