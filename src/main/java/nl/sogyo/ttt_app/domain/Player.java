@@ -39,6 +39,9 @@ public class Player implements IStorable{
     )
     private Set<Tournament> tournaments = new HashSet<Tournament>();
 
+    @ManyToMany(mappedBy = "players", fetch = FetchType.EAGER)
+    private Set<Match> matches = new HashSet<Match>();
+
     public Player(){
 
     }
@@ -73,6 +76,12 @@ public class Player implements IStorable{
     }
     public Set<Tournament> getTournaments(){
         return tournaments;
+    }
+    public Set<Match> getMatches() {
+        return matches;
+    }
+    public void setMatches(Set<Match> matches) {
+        this.matches = matches;
     }
 
     public void signUpForTournament(Tournament tournament){

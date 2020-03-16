@@ -158,4 +158,55 @@ public class TestDatabaseAccessor{
         assert(player1.getTournaments().contains(tournament1));
         assert(tournament1.getParticipants().contains(player1));
     }
+
+    @Test
+    public void TestCreateMatch(){
+        Player player1 = new Player();
+        player1.setName("player1");
+        Player player2 = new Player();
+        player2.setName("player2");
+        Match match = new Match(player1, player2);
+        databaseAccessor.createInDB(match);
+
+        hibernateSession.clear();
+
+        Match match2 = (Match) databaseAccessor.getFromDB(match.getID(), Match.class);
+
+        assertEquals(match.getPlayer1().getID(), match2.getPlayer1().getID());
+    }
+
+    @Test
+    public void TestAddGameToMatch(){
+        Match match = new Match();
+
+        Game game1 = new Game(11, 12);
+        match.gamePlayed(game1);
+        databaseAccessor.createInDB(match);
+
+        hibernateSession.clear();
+
+        Match match2 = (Match) databaseAccessor.getFromDB(match.getID(), Match.class);
+        Game game2 = (Game) databaseAccessor.getFromDB(game1.getID(), Game.class);
+        assertEquals(match2.getGames().get(0).getID(), game2.getID());
+    }
+
+    @Test
+    public void TestRemoveGameFromMatchRemovesFromDB(){
+        Match match = new Match();
+        Game game1 = new Game(11, 12);
+        match.gamePlayed(game1);
+        databaseAccessor.createInDB(match);
+
+        hibernateSession.clear();
+
+        Match match2 = (Match) databaseAccessor.getFromDB(match.getID(), Match.class);
+        match2.removeGame(0);
+        databaseAccessor.updateInDB(match2);
+
+        hibernateSession.clear();
+
+        Game game2 = (Game) databaseAccessor.getFromDB(game1.getID(), Game.class);
+
+        assert(game2 == null);
+    }
 }
