@@ -31,7 +31,7 @@ public class Player implements IStorable{
     @Column(name = "player_adress")
     private String adress;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
         name = "player_tournament_join",
         joinColumns = { @JoinColumn(name = "player_ID")},
@@ -39,7 +39,7 @@ public class Player implements IStorable{
     )
     private Set<Tournament> tournaments = new HashSet<Tournament>();
 
-    @ManyToMany(mappedBy = "players", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "players", fetch = FetchType.LAZY)
     private Set<Match> matches = new HashSet<Match>();
 
     public Player(){

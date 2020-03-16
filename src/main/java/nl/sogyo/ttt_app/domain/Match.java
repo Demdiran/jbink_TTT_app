@@ -26,7 +26,7 @@ public class Match implements IStorable{
     @Column(name = "match_ID")
     private int match_ID;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
         name = "match_player_join",
         joinColumns = {@JoinColumn(name = "match_ID")},
@@ -35,7 +35,7 @@ public class Match implements IStorable{
     @OrderColumn
     private Player[] players = new Player[2];
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "match_game_join")
     private List<Game> games = new ArrayList<Game>();
 
