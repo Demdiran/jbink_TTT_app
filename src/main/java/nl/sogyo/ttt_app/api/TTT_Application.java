@@ -1,10 +1,6 @@
 package nl.sogyo.ttt_app.api;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-
-import javax.xml.crypto.Data;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -46,6 +42,7 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
 	@PostMapping("/createTournament")
 	public Tournament createTournament(@AuthenticationPrincipal OAuth2User principal, @RequestBody Tournament tournament){
 		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
+		System.out.println(tournament.getTournamentDate());
 		databaseAccessor.createInDB(tournament);
 		databaseAccessor.closeSession();
 		return tournament;

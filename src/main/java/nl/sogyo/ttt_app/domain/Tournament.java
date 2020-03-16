@@ -67,10 +67,10 @@ public class Tournament implements IStorable{
     public void setAdress(String adress){
         this.adress = adress;
     }
-    public LocalDateTime getDate(){
+    public LocalDateTime getTournamentDate(){
         return tournamentDate;
     }
-    public void setDate(LocalDateTime tournamentDate){
+    public void setTournamentDate(LocalDateTime tournamentDate){
         this.tournamentDate = tournamentDate;
     }
     public int getMaxParticipants(){

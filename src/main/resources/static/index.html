@@ -98,14 +98,15 @@
                         <li><input v-model="name" placeholder="Tournament name" /></li>
                         <li><input v-model="club" placeholder="Club" /></li>
                         <li><input v-model="adress" placeholder="Adress" /></li>
-                        <li><input v-model="maxParticipants" placeholder="Maximum number of participants" /></li>
+                        <li><input v-model="date" type="datetime-local" /></li>
+                        <li><input v-model="maxParticipants" type="text" placeholder="Maximum number of participants" /></li>
                     </ul>
                     <button v-on:click="submit">Submit</button>
                 </div>
             `,
             methods: {
                 submit(){
-                    this.$emit('create-tournament', this.name, this.club, this.adress, this.maxParticipants);
+                    this.$emit('create-tournament', this.name, this.club, this.adress, this.date, this.maxParticipants);
                 }
             }
         });
@@ -217,7 +218,8 @@
                     console.log(tournaments);
                     this.tournaments = tournaments;
                 },
-                async createtournament(name, club, adress, maxParticipants){
+                async createtournament(name, club, adress, date, maxParticipants){
+                    console.log(date);
                     this.creatingtournament = false;
                     var cookie = this.getCookie("XSRF-TOKEN");
                     const response = await fetch("/createTournament", {
@@ -227,7 +229,7 @@
                             'Accept' : 'application/json',
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({name: name, club: club, adress: adress, maxParticipants: maxParticipants})
+                        body: JSON.stringify({name: name, club: club, adress: adress, tournamentDate: date, maxParticipants: maxParticipants})
                     });
                     tournament = await response.json();
                     this.tournaments.push(tournament);
