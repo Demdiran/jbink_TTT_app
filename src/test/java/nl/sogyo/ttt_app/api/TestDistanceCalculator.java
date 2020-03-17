@@ -17,6 +17,6 @@ public class TestDistanceCalculator{
         DistanceCalculator distanceCalculator = new DistanceCalculator();
         double distance = distanceCalculator.calculateDistance("De warande, 18", "budapestlaan 4");
         System.out.println(distance);
-        assert(Math.abs(124200 - distance) < 10);
+        assert(Math.abs(124 - distance) < 1);
     }
 }

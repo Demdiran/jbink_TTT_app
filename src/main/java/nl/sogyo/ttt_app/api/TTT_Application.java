@@ -35,12 +35,19 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
 	}
 
 	@GetMapping("/tournaments")
-	public List<TournamentResponse> tournaments(){
+	public List<TournamentResponse> tournaments(@AuthenticationPrincipal OAuth2User principal){
 		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
 		List<Tournament> tournaments = databaseAccessor.getAllFromDB(Tournament.class);
 		List<TournamentResponse> response = new ArrayList<TournamentResponse>();
 		for(Tournament tournament : tournaments){
-			response.add(new TournamentResponse(tournament));
+			TournamentResponse tournamentResponse = new TournamentResponse(tournament);
+			if(principal != null){
+				Player user = databaseAccessor.getOrCreatePlayerWithOutsideID(principal.getName());
+				DistanceCalculator distanceCalculator = new DistanceCalculator();
+				double distance = distanceCalculator.calculateDistance(user.getAdress(), tournament.getAdress());
+				tournamentResponse.setDistanceToUser(distance);
+			}
+			response.add(tournamentResponse);
 		}
 		databaseAccessor.closeSession();
 		return response;

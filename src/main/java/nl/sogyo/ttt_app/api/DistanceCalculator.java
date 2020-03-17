@@ -71,7 +71,6 @@ public class DistanceCalculator{
           result = apiInstance.search(q, format, normalizecity, addressdetails, viewbox, bounded, limit, acceptLanguage, countrycodes, namedetails, dedupe, extratags, statecode, matchquality, postaladdress);
           lon2 = Double.parseDouble(result.get(0).getLon());
           lat2 = Double.parseDouble(result.get(0).getLat());
-          System.out.println(result.get(0));
         } catch (ApiException e) {
           System.err.println("Exception when calling SearchApi#search");
           System.err.println("Status code: " + e.getCode());
@@ -89,7 +88,7 @@ public class DistanceCalculator{
       lat2 = degreesToRadians(lat2);
       double a = Math.pow(Math.sin(deltaLat/2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(deltaLon/2), 2);
       double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-      double distance = 6371000 * c;
+      double distance = 6371 * c;
       return distance;
     }
 

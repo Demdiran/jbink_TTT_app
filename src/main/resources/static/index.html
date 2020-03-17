@@ -16,11 +16,11 @@
             <loginscreen v-on:logging-in="login"></loginscreen>
         </template>
         <template v-else>
-            <authorizedview 
+            <accountview 
                 v-bind:user="user" 
                 v-bind:editingprofile="editingprofile" 
                 v-on:edit-profile="editingprofile=true">
-            </authorizedview>           
+            </accountview>           
             <profileeditor 
                 v-if="editingprofile" 
                 v-bind:user="user" 
@@ -111,7 +111,7 @@
                 }
             }
         });
-        Vue.component('authorizedview', {
+        Vue.component('accountview', {
             props: [ 'user', 'editingprofile'],
             template: `
             <div class="informationcolumn">
@@ -141,10 +141,11 @@
                             v-for="tournament in tournaments">
                                 <div class="informationbox">
                                     {{tournament.club}}'s {{tournament.name}}</br>
-                                    Waar? {{tournament.adress}}</br>
-                                    Wanneer? {{tournament.tournamentDate}}</br>
-                                    Maximaal {{tournament.maxParticipants}} deelnemers</br>
-                                    <div class="button" v-on:click="signup(tournament)">Sign up</div>
+                                    Where? {{tournament.adress}}</br>
+                                    When? {{tournament.tournamentDate}}</br>
+                                    Max. {{tournament.maxParticipants}} participants</br>
+                                    <span v-if="loggedin">Distance is {{tournament.distanceToUser.toFixed(2)}} kilometers</span></br>
+                                    <div class="button" v-if="loggedin" v-on:click="signup(tournament)">Sign up</div>
                                 </div>
                         </li>
                     </ul>

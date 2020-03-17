@@ -12,6 +12,7 @@ class TournamentResponse{
     private LocalDateTime tournamentDate;
     private int maxParticipants;
     private int amountOfParticipants;
+    private double distanceToUser;
     TournamentResponse(Tournament tournament){
         this.tournamentID = tournament.getID();
         this.name = tournament.getName();
@@ -46,6 +47,9 @@ class TournamentResponse{
     public int getTournamentID() {
         return tournamentID;
     }
+    public double getDistanceToUser() {
+        return distanceToUser;
+    }
     public void setAdress(String adress) {
         this.adress = adress;
     }
@@ -66,5 +70,8 @@ class TournamentResponse{
     }
     public void setTournamentID(int tournamentID) {
         this.tournamentID = tournamentID;
+    }
+    public void setDistanceToUser(double distanceToUser) {
+        this.distanceToUser = distanceToUser;
     }
 }
