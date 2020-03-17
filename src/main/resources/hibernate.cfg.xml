@@ -23,6 +23,8 @@
 		<!-- Mapping With Model Class Containing Annotations -->
 		<mapping class="nl.sogyo.ttt_app.domain.Player" />
 		<mapping class="nl.sogyo.ttt_app.domain.Tournament" />
+		<mapping class="nl.sogyo.ttt_app.domain.Match" />
+		<mapping class="nl.sogyo.ttt_app.domain.Game" />
 		<mapping class="nl.sogyo.ttt_app.api.OutsideIDPlayerID" />
 	</session-factory>
 	

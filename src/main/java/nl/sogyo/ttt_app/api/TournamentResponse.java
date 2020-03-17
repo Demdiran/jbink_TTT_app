@@ -22,6 +22,9 @@ class TournamentResponse{
         this.amountOfParticipants = tournament.getParticipants().size();
     }
 
+    TournamentResponse(){
+    }
+
     public String getAdress() {
         return adress;
     }
@@ -42,5 +45,26 @@ class TournamentResponse{
     }
     public int getTournamentID() {
         return tournamentID;
+    }
+    public void setAdress(String adress) {
+        this.adress = adress;
+    }
+    public void setAmountOfParticipants(int amountOfParticipants) {
+        this.amountOfParticipants = amountOfParticipants;
+    }
+    public void setClub(String club) {
+        this.club = club;
+    }
+    public void setMaxParticipants(int maxParticipants) {
+        this.maxParticipants = maxParticipants;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public void setTournamentDate(LocalDateTime tournamentDate) {
+        this.tournamentDate = tournamentDate;
+    }
+    public void setTournamentID(int tournamentID) {
+        this.tournamentID = tournamentID;
     }
 }

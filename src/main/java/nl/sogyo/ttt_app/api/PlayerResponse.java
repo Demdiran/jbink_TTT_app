@@ -21,8 +21,23 @@ class PlayerResponse {
         }
     }
 
+    PlayerResponse(){
+    }
+
     public void setAdress(String adress) {
         this.adress = adress;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public void setID(int player_ID) {
+        this.player_ID = player_ID;
+    }
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+    public void setTournaments(List<TournamentResponse> tournaments) {
+        this.tournaments = tournaments;
     }
     public String getAdress() {
         return adress;
