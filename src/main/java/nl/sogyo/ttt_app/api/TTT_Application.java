@@ -26,8 +26,6 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
 	@GetMapping("/user")
 	public PlayerResponse user(@AuthenticationPrincipal OAuth2User principal) {
 		String outside_ID = principal.getName();
-		System.out.println(outside_ID);
-		System.out.println(outside_ID.length());
 		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
 		OutsideIDPlayerID outsideIDPlayerID = databaseAccessor.getFromDB(outside_ID, OutsideIDPlayerID.class);
 		PlayerResponse response;
@@ -60,11 +58,8 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
 		for(Tournament tournament : tournaments){
 			TournamentResponse tournamentResponse = new TournamentResponse(tournament);
 			if(principal != null){
-				System.out.println("Principal name: " + principal.getName());
 				OutsideIDPlayerID outsideIDPlayerID = databaseAccessor.getFromDB(principal.getName(), OutsideIDPlayerID.class);
-				System.out.println(outsideIDPlayerID);
 				int userID = outsideIDPlayerID.getPlayer_ID();
-				System.out.println("UserID: " + userID);
 				Player player = databaseAccessor.getFromDB(userID, Player.class);
 				Adresshandler distanceCalculator = new Adresshandler();
 				System.out.println("User adress: " + player.getAdress() + " Tournament adress: " + tournament.getAdress());

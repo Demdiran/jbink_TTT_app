@@ -13,7 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import nl.sogyo.ttt_app.api.IStorable;
@@ -31,8 +31,8 @@ public class Player implements IStorable{
     private String name;
 
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "adress")
+    @ManyToOne()
+    @JoinColumn(name = "adress_ID")
     private Adress adress;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

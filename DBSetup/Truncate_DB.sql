@@ -4,7 +4,6 @@ truncate table match_game_join;
 truncate table outsideid_playerid;
 truncate table player_tournament_join;
 truncate table match_player_join;
-truncate table teams;
 truncate table games;
 truncate table matches;
 truncate table players;
