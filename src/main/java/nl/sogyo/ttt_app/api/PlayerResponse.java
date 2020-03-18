@@ -7,7 +7,7 @@ import nl.sogyo.ttt_app.domain.Adress;
 import nl.sogyo.ttt_app.domain.Player;
 import nl.sogyo.ttt_app.domain.Tournament;
 
-class PlayerResponse {
+public class PlayerResponse {
     private int player_ID;
     private int rating;
     private String name;

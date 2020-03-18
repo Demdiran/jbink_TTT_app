@@ -228,16 +228,16 @@
                     this.user = undefined;
                 },
                 async checkInputAndEditProfile(username, useradress, userrating){
-                    let inputvalid = checkInput(username, useradress, userrating);
+                    let inputvalid = this.checkInput(username, useradress, userrating);
                     if(inputvalid){
-                        updateProfile(username, useradress, userrating);
+                        this.updateProfile(username, useradress, userrating);
                     }
                 },
                 async checkInput(username, useradress, userrating){                    
-                    let namevalid = checkUsername(username);
-                    let adressvalid = checkAdress(useradress);
-                    let ratingvalid = checkRating(userrating);
-                    return namevalid && adressValid && ratingvalid;
+                    let namevalid = this.checkUsername(username);
+                    let adressvalid = this.checkAdress(useradress);
+                    let ratingvalid = this.checkRating(userrating);
+                    return namevalid && adressvalid && ratingvalid;
                 },
                 checkUsername(name){
                     return name != null;
@@ -272,6 +272,7 @@
                     this.user.adress = useradress;
                     this.user.rating = userrating;
                     console.log(this.user);
+                    var cookie = this.getCookie("XSRF-TOKEN");
                     const editprofile = await fetch("/editprofile", {
                         method: 'POST',
                         headers: {
@@ -281,8 +282,6 @@
                         },
                         body: JSON.stringify(this.user)
                     });
-                    const user = await editprofile.json();
-                    this.user = user;
                     this.editingprofile = false;
                     this.editprofilemessage = undefined;
                 },
