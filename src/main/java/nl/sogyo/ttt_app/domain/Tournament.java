@@ -30,7 +30,7 @@ public class Tournament implements IStorable{
     private String club;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "tournament_adress")
+    @JoinColumn(name = "adress")
     private Adress adress;
 
     @Column(name = "date")

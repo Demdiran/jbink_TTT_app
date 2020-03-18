@@ -1,4 +1,4 @@
-use ttt_db;
+use ttt_DB;
 create table `match_game_join`(
 `match_ID`			int unsigned not null,
 `game_ID` 			int unsigned not null,
