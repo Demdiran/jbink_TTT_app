@@ -17,13 +17,13 @@ public class Adress implements IStorable{
     @Column(name = "adress_ID")
     private int adress_ID;
     @Column(name = "street")
-    private String street;
+    private String street = "";
     @Column(name = "city")
-    private String city;
+    private String city = "";
     @Column(name = "streetnumber")
-    private int streetnumber;
+    private String streetnumber = "";
     @Column(name = "postalcode")
-    private String postalcode;
+    private String postalcode = "";
 
     public int getAdress_ID() {
         return adress_ID;
@@ -31,7 +31,7 @@ public class Adress implements IStorable{
     public String getCity() {
         return city;
     }
-    public int getStreetnumber() {
+    public String getStreetnumber() {
         return streetnumber;
     }
     public String getPostalcode() {
@@ -46,7 +46,7 @@ public class Adress implements IStorable{
     public void setCity(String city) {
         this.city = city;
     }
-    public void setStreetnumber(int streetnumber) {
+    public void setStreetnumber(String streetnumber) {
         this.streetnumber = streetnumber;
     }
     public void setPostalcode(String postalcode) {

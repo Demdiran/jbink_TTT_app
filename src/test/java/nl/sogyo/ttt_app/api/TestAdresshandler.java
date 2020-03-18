@@ -14,12 +14,12 @@ public class TestAdresshandler{
         Adresshandler distanceCalculator = new Adresshandler();
         Adress adress1 = new Adress();
         adress1.setStreet("De Warande");
-        adress1.setStreetnumber(18);
+        adress1.setStreetnumber("18");
         adress1.setCity("Middelburg");
         adress1.setPostalcode("4333LD");
         Adress adress2 = new Adress();
         adress2.setStreet("budapestlaan");
-        adress2.setStreetnumber(4);
+        adress2.setStreetnumber("4");
         adress2.setPostalcode("3584CD");
         double distance = distanceCalculator.calculateDistance(adress1, adress2);
         System.out.println(distance);
@@ -32,7 +32,7 @@ public class TestAdresshandler{
         adress.setCity("Driebergen");
         adress.setPostalcode("3972XZ");
         adress.setStreet("De Warande");
-        adress.setStreetnumber(18);
+        adress.setStreetnumber("18");
 
         Adresshandler adresshandler = new Adresshandler();
         try {
@@ -53,7 +53,7 @@ public class TestAdresshandler{
         adress.setCity("Driebergen");
         adress.setPostalcode("3972XY");
         adress.setStreet("De Warande");
-        adress.setStreetnumber(18);
+        adress.setStreetnumber("18");
 
         Adresshandler adresshandler = new Adresshandler();
         try {

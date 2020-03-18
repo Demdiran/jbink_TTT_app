@@ -32,6 +32,10 @@ ul{
   height: 97%;
 }
 
+#nrinput{
+  width: 40px;
+}
+
 .informationbox, .informationcolumn{
   border-style: solid;
   border-width: thin;

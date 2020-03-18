@@ -48,6 +48,7 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
 			databaseAccessor.createInDB(outsideIDPlayerID);
 
 			response = new PlayerResponse(player);
+			response.setAdress(player.getAdress());
 		}
 		databaseAccessor.closeSession();
 		return response;
@@ -110,13 +111,16 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
 	}
 
 	@PostMapping("/editprofile")
-	public void editprofile(@AuthenticationPrincipal OAuth2User principal, @RequestBody PlayerResponse user){
+	public PlayerResponse editprofile(@AuthenticationPrincipal OAuth2User principal, @RequestBody PlayerResponse user){
 		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
 		Player player = databaseAccessor.getFromDB(user.getID(), Player.class);
 		player.setAdress(user.getAdress());
 		player.setName(user.getName());
 		databaseAccessor.updateInDB(player);
+		PlayerResponse response = new PlayerResponse(player);
+		response.setAdress(player.getAdress());
 		databaseAccessor.closeSession();
+		return response;
 	}
 
 	public static void main(String[] args) {
