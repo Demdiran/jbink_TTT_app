@@ -3,6 +3,8 @@ package nl.sogyo.ttt_app.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import LocationIq.ApiException;
 import nl.sogyo.ttt_app.domain.*;
 
 @SpringBootApplication
@@ -94,12 +97,23 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
 		return response;
 	}
 
+	@PostMapping("/checkadress")
+	public Boolean checkadress(@RequestBody Adress adress, HttpServletResponse response){
+		Boolean adressValid = false;
+		Adresshandler adresshandler = new Adresshandler();
+		try {
+			adressValid = adresshandler.checkAdress(adress);
+		} catch (ApiException e) {
+			response.setStatus(e.getCode());
+		}
+		return adressValid;
+	}
+
 	@PostMapping("/editprofile")
 	public void editprofile(@AuthenticationPrincipal OAuth2User principal, @RequestBody PlayerResponse user){
 		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
 		Player player = databaseAccessor.getFromDB(user.getID(), Player.class);
 		player.setAdress(user.getAdress());
-		//Check adress---------------------------------------------------------------------------------
 		player.setName(user.getName());
 		databaseAccessor.updateInDB(player);
 		databaseAccessor.closeSession();
