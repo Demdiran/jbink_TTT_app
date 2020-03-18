@@ -32,7 +32,7 @@ public class Player implements IStorable{
 
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "adress")
+    @JoinColumn(name = "player_adress")
     private Adress adress;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
