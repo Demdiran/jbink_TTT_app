@@ -1,6 +1,5 @@
 package nl.sogyo.ttt_app.api;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
@@ -36,7 +35,7 @@ public class TestAdresshandler{
 
         Adresshandler adresshandler = new Adresshandler();
         try {
-            assert(adresshandler.checkAdress(adress));            
+            assert(adresshandler.checkAdressMatchesPostalcode(adress));            
         }
         catch (ApiException e) {
             System.err.println("Exception when calling SearchApi#search");
@@ -57,7 +56,7 @@ public class TestAdresshandler{
 
         Adresshandler adresshandler = new Adresshandler();
         try {
-            assert(!adresshandler.checkAdress(adress));            
+            assert(!adresshandler.checkAdressMatchesPostalcode(adress));            
         }
         catch (ApiException e) {
             System.err.println("Exception when calling SearchApi#search");

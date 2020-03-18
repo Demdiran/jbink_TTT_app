@@ -50,28 +50,15 @@ public class Adresshandler{
         double lat1 = 0;
         double lon2 = 0;
         double lat2 = 0;
-        List<Location> result;
-        SearchApi apiInstance = new SearchApi(defaultClient);
         
-        q = adress1.getPostalcode();
         try {
-          result = apiInstance.search(q, format, normalizecity, addressdetails, viewbox, bounded, limit, acceptLanguage, countrycodes, namedetails, dedupe, extratags, statecode, matchquality, postaladdress);
-          lon1 = Double.parseDouble(result.get(0).getLon());
-          lat1 = Double.parseDouble(result.get(0).getLat());
-          System.out.println(result.get(0));
-        } catch (ApiException e) {
-          System.err.println("Exception when calling SearchApi#search");
-          System.err.println("Status code: " + e.getCode());
-          System.err.println("Reason: " + e.getResponseBody());
-          System.err.println("Response headers: " + e.getResponseHeaders());
-          e.printStackTrace();
-        }
+          Location location = findLocation(adress1);
+          lon1 = Double.parseDouble(location.getLon());
+          lat1 = Double.parseDouble(location.getLat());
 
-        q = adress2.getPostalcode();
-        try {
-          result = apiInstance.search(q, format, normalizecity, addressdetails, viewbox, bounded, limit, acceptLanguage, countrycodes, namedetails, dedupe, extratags, statecode, matchquality, postaladdress);
-          lon2 = Double.parseDouble(result.get(0).getLon());
-          lat2 = Double.parseDouble(result.get(0).getLat());
+          location = findLocation(adress2);
+          lon2 = Double.parseDouble(location.getLon());
+          lat2 = Double.parseDouble(location.getLat());
         } catch (ApiException e) {
           System.err.println("Exception when calling SearchApi#search");
           System.err.println("Status code: " + e.getCode());
@@ -97,13 +84,19 @@ public class Adresshandler{
       return degrees * Math.PI / 180;
     }
 
-    public boolean checkAdress(Adress adress)throws ApiException{
+    public boolean checkAdressMatchesPostalcode(Adress adress)throws ApiException{
+      Location location = findLocation(adress);
+      return location.getAddress().getPostcode().equals(adress.getPostalcode());
+    }
+
+    private Location findLocation(Adress adress)throws ApiException{
       List<Location> result;
       SearchApi apiInstance = new SearchApi(defaultClient);
-
-      q = adress.getStreet() + " " + adress.getStreetnumber() + ", " + adress.getCity();
-      result = apiInstance.search(q, format, normalizecity, addressdetails, viewbox, bounded, limit, acceptLanguage, countrycodes, namedetails, dedupe, extratags, statecode, matchquality, postaladdress);
       
-      return result.get(0).getAddress().getPostcode().equals(adress.getPostalcode());
+      q = adress.getStreet() + " " + adress.getStreetnumber() + ", " + adress.getCity() + ", " + adress.getPostalcode();
+      result = apiInstance.search(q, format, normalizecity, addressdetails, viewbox, bounded, limit, acceptLanguage, countrycodes, namedetails, dedupe, extratags, statecode, matchquality, postaladdress);
+      System.out.println(result.get(0));
+      return result.get(0);
+
     }
 }

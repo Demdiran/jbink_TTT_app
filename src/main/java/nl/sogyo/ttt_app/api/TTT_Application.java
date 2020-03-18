@@ -103,7 +103,7 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
 		Boolean adressValid = false;
 		Adresshandler adresshandler = new Adresshandler();
 		try {
-			adressValid = adresshandler.checkAdress(adress);
+			adressValid = adresshandler.checkAdressMatchesPostalcode(adress);
 		} catch (ApiException e) {
 			response.setStatus(e.getCode());
 		}

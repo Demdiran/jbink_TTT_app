@@ -16,7 +16,7 @@
             <profileeditor 
                 v-bind:user="user"
                 v-bind:editprofilemessage="editprofilemessage"
-                v-on:change-profile-information="editprofile">
+                v-on:change-profile-information="checkInputAndEditProfile">
             </profileeditor>
             <logoutbutton 
                 v-on:log-out="logout">
@@ -227,7 +227,25 @@
                     this.editprofilemessage = undefined;
                     this.user = undefined;
                 },
-                async editprofile(username, useradress, userrating){
+                async checkInputAndEditProfile(username, useradress, userrating){
+                    let inputvalid = checkInput(username, useradress, userrating);
+                    if(inputvalid){
+                        updateProfile(username, useradress, userrating);
+                    }
+                },
+                async checkInput(username, useradress, userrating){                    
+                    let namevalid = checkUsername(username);
+                    let adressvalid = checkAdress(useradress);
+                    let ratingvalid = checkRating(userrating);
+                    return namevalid && adressValid && ratingvalid;
+                },
+                checkUsername(name){
+                    return name != null;
+                },
+                checkRating(rating){
+                    return rating > 0;
+                },
+                async checkAdress(adress){
                     var cookie = this.getCookie("XSRF-TOKEN");
                     console.log("checking adress")
                     const checkadress = await fetch("/checkadress", {
@@ -237,14 +255,19 @@
                             'Accept' : 'application/json',
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify(useradress)
+                        body: JSON.stringify(adress)
                     });
                     const adressValid = await checkadress.json();
                     if(!adressValid){
                         console.log("adress invalid")
                         this.editprofilemessage = this.createEditProfileMessage(checkadress.status);
-                        return;
+                        return false;
                     }
+                    else{
+                        return true;
+                    }
+                },
+                async updateProfile(username, useradress, userrating){
                     this.user.name=username;
                     this.user.adress = useradress;
                     this.user.rating = userrating;
@@ -287,7 +310,6 @@
                     });
                     tournament = await response.json();
                     this.tournaments.push(tournament);
-
                 },
                 async signUpForTournament(tournament){
                     console.log(tournament);
