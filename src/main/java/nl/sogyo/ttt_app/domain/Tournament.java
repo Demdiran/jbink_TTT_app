@@ -29,7 +29,7 @@ public class Tournament implements IStorable{
     @Column(name = "club")
     private String club;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "adress_ID")
     private Adress adress;
 

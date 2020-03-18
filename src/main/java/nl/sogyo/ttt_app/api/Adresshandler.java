@@ -97,7 +97,13 @@ public class Adresshandler{
       return degrees * Math.PI / 180;
     }
 
-    // public boolean checkAdress(String adress){
+    public boolean checkAdress(Adress adress)throws ApiException{
+      List<Location> result;
+      SearchApi apiInstance = new SearchApi(defaultClient);
+
+      q = adress.getStreet() + " " + adress.getStreetnumber() + ", " + adress.getCity();
+      result = apiInstance.search(q, format, normalizecity, addressdetails, viewbox, bounded, limit, acceptLanguage, countrycodes, namedetails, dedupe, extratags, statecode, matchquality, postaladdress);
       
-    // }
+      return result.get(0).getAddress().getPostcode().equals(adress.getPostalcode());
+    }
 }

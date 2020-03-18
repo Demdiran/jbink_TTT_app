@@ -31,7 +31,7 @@ public class Player implements IStorable{
     private String name;
 
 
-    @ManyToOne()
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "adress_ID")
     private Adress adress;
 

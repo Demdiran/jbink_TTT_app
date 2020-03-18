@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
+import LocationIq.ApiException;
 import nl.sogyo.ttt_app.domain.Adress;
 
 
@@ -23,5 +24,47 @@ public class TestAdresshandler{
         double distance = distanceCalculator.calculateDistance(adress1, adress2);
         System.out.println(distance);
         assert(Math.abs(124 - distance) < 1);
+    }
+
+    @Test
+    public void TestCheckadressTrue()throws ApiException{
+        Adress adress = new Adress();
+        adress.setCity("Driebergen");
+        adress.setPostalcode("3972XZ");
+        adress.setStreet("De Warande");
+        adress.setStreetnumber(18);
+
+        Adresshandler adresshandler = new Adresshandler();
+        try {
+            assert(adresshandler.checkAdress(adress));            
+        }
+        catch (ApiException e) {
+            System.err.println("Exception when calling SearchApi#search");
+            System.err.println("Status code: " + e.getCode());
+            System.err.println("Reason: " + e.getResponseBody());
+            System.err.println("Response headers: " + e.getResponseHeaders());
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void TestCheckadressFalse()throws ApiException{
+        Adress adress = new Adress();
+        adress.setCity("Driebergen");
+        adress.setPostalcode("3972XY");
+        adress.setStreet("De Warande");
+        adress.setStreetnumber(18);
+
+        Adresshandler adresshandler = new Adresshandler();
+        try {
+            assert(!adresshandler.checkAdress(adress));            
+        }
+        catch (ApiException e) {
+            System.err.println("Exception when calling SearchApi#search");
+            System.err.println("Status code: " + e.getCode());
+            System.err.println("Reason: " + e.getResponseBody());
+            System.err.println("Response headers: " + e.getResponseHeaders());
+            e.printStackTrace();
+        }
     }
 }
