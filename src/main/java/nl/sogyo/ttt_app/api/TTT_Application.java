@@ -116,6 +116,7 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
 		Player player = databaseAccessor.getFromDB(user.getID(), Player.class);
 		player.setAdress(user.getAdress());
 		player.setName(user.getName());
+		player.setRating(user.getRating());
 		databaseAccessor.updateInDB(player);
 		PlayerResponse response = new PlayerResponse(player);
 		response.setAdress(player.getAdress());

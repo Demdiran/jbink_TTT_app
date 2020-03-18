@@ -71,13 +71,14 @@
                 return {
                     username: this.user.name,
                     useradress: this.user.adress,
+                    userrating: this.user.rating,
                 }
             },
             template: `
                 <div class="informationcolumn">
                     <ul>
                         <li>Name: <input v-model="username"/></li>
-                        <li>Rating: {{user.rating}}</li>
+                        <li>Rating: <input v-model="userrating" /></li>
                         <li>Street: <input v-model="useradress.street" /> <input v-model="useradress.streetnumber" id="nrinput" placeholder="nr."/></li>
                         <li>City: <input v-model="useradress.city" /></li>
                         <li>Postal code: <input v-model="useradress.postalcode" placeholder="1234AB" /></li>
@@ -88,7 +89,7 @@
             `,
             methods: {
                 submit(){
-                    this.$emit('change-profile-information', this.username, this.useradress);
+                    this.$emit('change-profile-information', this.username, this.useradress, this.userrating);
                 }
             }
         });
@@ -226,7 +227,7 @@
                     this.editprofilemessage = undefined;
                     this.user = undefined;
                 },
-                async editprofile(username, useradress){
+                async editprofile(username, useradress, userrating){
                     var cookie = this.getCookie("XSRF-TOKEN");
                     console.log("checking adress")
                     const checkadress = await fetch("/checkadress", {
@@ -246,6 +247,7 @@
                     }
                     this.user.name=username;
                     this.user.adress = useradress;
+                    this.user.rating = userrating;
                     console.log(this.user);
                     const editprofile = await fetch("/editprofile", {
                         method: 'POST',
