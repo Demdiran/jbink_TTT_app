@@ -4,13 +4,16 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.HashSet;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import nl.sogyo.ttt_app.api.IStorable;
@@ -25,8 +28,11 @@ public class Tournament implements IStorable{
     private String name;
     @Column(name = "club")
     private String club;
-    @Column(name = "adress")
-    private String adress;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "adress")
+    private Adress adress;
+
     @Column(name = "date")
     private LocalDateTime tournamentDate;
     @Column(name = "max_participants")
@@ -61,10 +67,10 @@ public class Tournament implements IStorable{
     public void setClub(String club) {
         this.club = club;
     }
-    public String getAdress(){
+    public Adress getAdress(){
         return adress;
     }
-    public void setAdress(String adress){
+    public void setAdress(Adress adress){
         this.adress = adress;
     }
     public LocalDateTime getTournamentDate(){

@@ -35,7 +35,7 @@ public class TestDatabaseAccessor{
 
         hibernateSession.clear();
 
-        Player testplayer = (Player) databaseAccessor.getFromDB(testplayerin.getID(), Player.class);
+        Player testplayer = databaseAccessor.getFromDB(testplayerin.getID(), Player.class);
         assertEquals("testplayer1", testplayer.getName());
         assertEquals(800, testplayer.getRating());
     }
@@ -49,14 +49,14 @@ public class TestDatabaseAccessor{
 
         hibernateSession.clear();
         
-        Player testplayerout = (Player) databaseAccessor.getFromDB(testplayerin.getID(), Player.class);
+        Player testplayerout = databaseAccessor.getFromDB(testplayerin.getID(), Player.class);
 
         testplayerout.setName("testplayerout");
         databaseAccessor.updateInDB(testplayerout);
 
         hibernateSession.clear();
 
-        Player testplayerFinal = (Player) databaseAccessor.getFromDB(testplayerin.getID(), Player.class);
+        Player testplayerFinal = databaseAccessor.getFromDB(testplayerin.getID(), Player.class);
         assertEquals("testplayerout", testplayerFinal.getName());
     }
 
@@ -82,10 +82,10 @@ public class TestDatabaseAccessor{
 
         hibernateSession.clear();
 
-        Player testplayer1out = (Player) databaseAccessor.getFromDB(testplayer1.getID(), Player.class);
-        Player testplayer2out = (Player) databaseAccessor.getFromDB(testplayer2.getID(), Player.class);
-        Tournament testtTournament1out = (Tournament) databaseAccessor.getFromDB(testTournament1.getID(), Tournament.class);
-        Tournament testtTournament2out = (Tournament) databaseAccessor.getFromDB(testTournament2.getID(), Tournament.class);
+        Player testplayer1out = databaseAccessor.getFromDB(testplayer1.getID(), Player.class);
+        Player testplayer2out = databaseAccessor.getFromDB(testplayer2.getID(), Player.class);
+        Tournament testtTournament1out = databaseAccessor.getFromDB(testTournament1.getID(), Tournament.class);
+        Tournament testtTournament2out = databaseAccessor.getFromDB(testTournament2.getID(), Tournament.class);
 
         assertEquals("testplayer1", testplayer1out.getName());
         assertEquals(800, testplayer1out.getRating());
@@ -98,23 +98,40 @@ public class TestDatabaseAccessor{
 
     @Test
     public void TestCreateNewPlayer(){
-        Player testplayer = databaseAccessor.getOrCreatePlayerWithOutsideID("testID");
+        Player testplayer = new Player();
+        databaseAccessor.createInDB(testplayer);
+        
+        hibernateSession.clear();
+
+        testplayer = databaseAccessor.getFromDB(testplayer.getID(), Player.class);
         assert(testplayer != null);
     }
 
     @Test
     public void TestObtainexistingPlayerFromOutsideKey(){
-        Player testplayer = databaseAccessor.getOrCreatePlayerWithOutsideID("testID");
+        Player testplayer = new Player();
+        OutsideIDPlayerID outsideIDPlayerID = new OutsideIDPlayerID();
+        databaseAccessor.createInDB(testplayer);
+
+        outsideIDPlayerID.setOutside_ID("112051039539039118824");
+        outsideIDPlayerID.setPlayer_ID(testplayer.getID());
+        databaseAccessor.createInDB(outsideIDPlayerID);
+
         hibernateSession.clear();
-        Player testplayer2 = databaseAccessor.getOrCreatePlayerWithOutsideID("testID");
+
+        outsideIDPlayerID = databaseAccessor.getFromDB("112051039539039118824", OutsideIDPlayerID.class);        
+        Player testplayer2 = databaseAccessor.getFromDB(outsideIDPlayerID.getPlayer_ID(), Player.class);
         assertEquals(testplayer.getID(), testplayer2.getID());
     }
 
     @Test
     public void TestGetAllPlayersFromDB(){
-        Player player1 = databaseAccessor.getOrCreatePlayerWithOutsideID("player1");
-        Player player2 = databaseAccessor.getOrCreatePlayerWithOutsideID("player2");
-        Player player3 = databaseAccessor.getOrCreatePlayerWithOutsideID("player3");
+        Player player1 = new Player();
+        Player player2 = new Player();
+        Player player3 = new Player();
+        databaseAccessor.createInDB(player1);
+        databaseAccessor.createInDB(player2);
+        databaseAccessor.createInDB(player3);
         List<Player> players = databaseAccessor.getAllFromDB(Player.class);
         assertEquals(player1.getID(), players.get(0).getID());
         assertEquals(player2.getID(), players.get(1).getID());
@@ -170,7 +187,7 @@ public class TestDatabaseAccessor{
 
         hibernateSession.clear();
 
-        Match match2 = (Match) databaseAccessor.getFromDB(match.getID(), Match.class);
+        Match match2 = databaseAccessor.getFromDB(match.getID(), Match.class);
 
         assertEquals(match.getPlayer1().getID(), match2.getPlayer1().getID());
     }
@@ -185,8 +202,8 @@ public class TestDatabaseAccessor{
 
         hibernateSession.clear();
 
-        Match match2 = (Match) databaseAccessor.getFromDB(match.getID(), Match.class);
-        Game game2 = (Game) databaseAccessor.getFromDB(game1.getID(), Game.class);
+        Match match2 = databaseAccessor.getFromDB(match.getID(), Match.class);
+        Game game2 = databaseAccessor.getFromDB(game1.getID(), Game.class);
         assertEquals(match2.getGames().get(0).getID(), game2.getID());
     }
 
@@ -199,14 +216,29 @@ public class TestDatabaseAccessor{
 
         hibernateSession.clear();
 
-        Match match2 = (Match) databaseAccessor.getFromDB(match.getID(), Match.class);
+        Match match2 = databaseAccessor.getFromDB(match.getID(), Match.class);
         match2.removeGame(0);
         databaseAccessor.updateInDB(match2);
 
         hibernateSession.clear();
 
-        Game game2 = (Game) databaseAccessor.getFromDB(game1.getID(), Game.class);
+        Game game2 = databaseAccessor.getFromDB(game1.getID(), Game.class);
 
         assert(game2 == null);
+    }
+
+    @Test
+    public void TestAdress(){
+        Player player = new Player();
+        Adress adress = new Adress();
+        adress.setStreet("De Warande");
+        adress.setPostalcode("1234ap");
+        player.setAdress(adress);
+        databaseAccessor.createInDB(player);
+
+        hibernateSession.clear();
+
+        Adress adress2 = databaseAccessor.getFromDB(adress.getAdress_ID(), Adress.class);
+        assertEquals("De Warande", adress2.getStreet());
     }
 }

@@ -26,10 +26,28 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
 	@GetMapping("/user")
 	public PlayerResponse user(@AuthenticationPrincipal OAuth2User principal) {
 		String outside_ID = principal.getName();
+		System.out.println(outside_ID);
+		System.out.println(outside_ID.length());
 		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
-		Player user = databaseAccessor.getOrCreatePlayerWithOutsideID(outside_ID);
-		PlayerResponse response = new PlayerResponse(user);
-		response.setAdress(user.getAdress());
+		OutsideIDPlayerID outsideIDPlayerID = databaseAccessor.getFromDB(outside_ID, OutsideIDPlayerID.class);
+		PlayerResponse response;
+		if(outsideIDPlayerID != null){
+			int playerID = outsideIDPlayerID.getPlayer_ID();
+			Player player = databaseAccessor.getFromDB(playerID, Player.class);
+			response = new PlayerResponse(player);
+			response.setAdress(player.getAdress());
+		}
+		else{
+			Player player = new Player();
+			databaseAccessor.createInDB(player);
+
+			outsideIDPlayerID = new OutsideIDPlayerID();
+			outsideIDPlayerID.setOutside_ID(outside_ID);
+			outsideIDPlayerID.setPlayer_ID(player.getID());
+			databaseAccessor.createInDB(outsideIDPlayerID);
+
+			response = new PlayerResponse(player);
+		}
 		databaseAccessor.closeSession();
 		return response;
 	}
@@ -42,9 +60,15 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
 		for(Tournament tournament : tournaments){
 			TournamentResponse tournamentResponse = new TournamentResponse(tournament);
 			if(principal != null){
-				Player user = databaseAccessor.getOrCreatePlayerWithOutsideID(principal.getName());
-				DistanceCalculator distanceCalculator = new DistanceCalculator();
-				double distance = distanceCalculator.calculateDistance(user.getAdress(), tournament.getAdress());
+				System.out.println("Principal name: " + principal.getName());
+				OutsideIDPlayerID outsideIDPlayerID = databaseAccessor.getFromDB(principal.getName(), OutsideIDPlayerID.class);
+				System.out.println(outsideIDPlayerID);
+				int userID = outsideIDPlayerID.getPlayer_ID();
+				System.out.println("UserID: " + userID);
+				Player player = databaseAccessor.getFromDB(userID, Player.class);
+				Adresshandler distanceCalculator = new Adresshandler();
+				System.out.println("User adress: " + player.getAdress() + " Tournament adress: " + tournament.getAdress());
+				double distance = distanceCalculator.calculateDistance(player.getAdress(), tournament.getAdress());
 				tournamentResponse.setDistanceToUser(distance);
 			}
 			response.add(tournamentResponse);
@@ -64,23 +88,24 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
 	@PostMapping("/signUpForTournament")
 	public PlayerResponse signUpForTournament(@AuthenticationPrincipal OAuth2User principal, Integer tournamentID){
 		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
-		Player user = databaseAccessor.getOrCreatePlayerWithOutsideID(principal.getName());
-		Tournament tournament = (Tournament) databaseAccessor.getFromDB(tournamentID, Tournament.class);
-		user.signUpForTournament(tournament);
-		databaseAccessor.updateInDB(user);
+		int userID = databaseAccessor.getFromDB(principal.getName(), OutsideIDPlayerID.class).getPlayer_ID();
+		Player player = databaseAccessor.getFromDB(userID, Player.class);
+		Tournament tournament = databaseAccessor.getFromDB(tournamentID, Tournament.class);
+		player.signUpForTournament(tournament);
+		databaseAccessor.updateInDB(player);
 		databaseAccessor.closeSession();
-		PlayerResponse response = new PlayerResponse(user);
-		response.setAdress(user.getAdress());
+		PlayerResponse response = new PlayerResponse(player);
+		response.setAdress(player.getAdress());
 		return response;
 	}
 
 	@PostMapping("/editprofile")
 	public void editprofile(@AuthenticationPrincipal OAuth2User principal, @RequestBody PlayerResponse user){
 		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
-		Player player = (Player) databaseAccessor.getFromDB(user.getID(), Player.class);
+		Player player = databaseAccessor.getFromDB(user.getID(), Player.class);
 		player.setAdress(user.getAdress());
+		//Check adress---------------------------------------------------------------------------------
 		player.setName(user.getName());
-		player.setRating(user.getRating());
 		databaseAccessor.updateInDB(player);
 		databaseAccessor.closeSession();
 	}

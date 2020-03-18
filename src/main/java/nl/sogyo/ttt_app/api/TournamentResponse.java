@@ -2,13 +2,14 @@ package nl.sogyo.ttt_app.api;
 
 import java.time.LocalDateTime;
 
+import nl.sogyo.ttt_app.domain.Adress;
 import nl.sogyo.ttt_app.domain.Tournament;
 
 class TournamentResponse{
     private int tournamentID;
     private String name;
     private String club;
-    private String adress;
+    private Adress adress;
     private LocalDateTime tournamentDate;
     private int maxParticipants;
     private int amountOfParticipants;
@@ -26,7 +27,7 @@ class TournamentResponse{
     TournamentResponse(){
     }
 
-    public String getAdress() {
+    public Adress getAdress() {
         return adress;
     }
     public int getAmountOfParticipants() {
@@ -50,7 +51,7 @@ class TournamentResponse{
     public double getDistanceToUser() {
         return distanceToUser;
     }
-    public void setAdress(String adress) {
+    public void setAdress(Adress adress) {
         this.adress = adress;
     }
     public void setAmountOfParticipants(int amountOfParticipants) {

@@ -5,13 +5,14 @@ import LocationIq.ApiException;
 import LocationIq.Configuration;
 import LocationIq.auth.*;
 // import LocationIq.models.*;
+import nl.sogyo.ttt_app.domain.Adress;
 
 import java.util.List;
 
 import com.locationiq.client.api.SearchApi;
 import com.locationiq.client.model.Location;
 
-public class DistanceCalculator{
+public class Adresshandler{
     ApiClient defaultClient;
 
     String q; // String | Address to geocode
@@ -33,7 +34,7 @@ public class DistanceCalculator{
     public static void main(String[] args) {
     }
 
-    public DistanceCalculator(){
+    public Adresshandler(){
         defaultClient = Configuration.getDefaultApiClient();
         defaultClient.setBasePath("https://eu1.locationiq.com/v1");
         
@@ -44,7 +45,7 @@ public class DistanceCalculator{
         //key.setApiKeyPrefix("Token");
     }
 
-    public double calculateDistance(String adress1, String adress2){
+    public double calculateDistance(Adress adress1, Adress adress2){
         double lon1 = 0;
         double lat1 = 0;
         double lon2 = 0;
@@ -52,7 +53,7 @@ public class DistanceCalculator{
         List<Location> result;
         SearchApi apiInstance = new SearchApi(defaultClient);
         
-        q = adress1;
+        q = adress1.getPostalcode();
         try {
           result = apiInstance.search(q, format, normalizecity, addressdetails, viewbox, bounded, limit, acceptLanguage, countrycodes, namedetails, dedupe, extratags, statecode, matchquality, postaladdress);
           lon1 = Double.parseDouble(result.get(0).getLon());
@@ -66,7 +67,7 @@ public class DistanceCalculator{
           e.printStackTrace();
         }
 
-        q = adress2;
+        q = adress2.getPostalcode();
         try {
           result = apiInstance.search(q, format, normalizecity, addressdetails, viewbox, bounded, limit, acceptLanguage, countrycodes, namedetails, dedupe, extratags, statecode, matchquality, postaladdress);
           lon2 = Double.parseDouble(result.get(0).getLon());
@@ -96,4 +97,7 @@ public class DistanceCalculator{
       return degrees * Math.PI / 180;
     }
 
+    // public boolean checkAdress(String adress){
+      
+    // }
 }

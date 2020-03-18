@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import nl.sogyo.ttt_app.api.IStorable;
@@ -28,8 +29,11 @@ public class Player implements IStorable{
     private int rating;
     @Column(name = "player_name")
     private String name;
-    @Column(name = "player_adress")
-    private String adress;
+
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "adress")
+    private Adress adress;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
@@ -43,7 +47,7 @@ public class Player implements IStorable{
     private Set<Match> matches = new HashSet<Match>();
 
     public Player(){
-
+        this.rating = 800;
     }
 
     public Player(String name){
@@ -68,10 +72,10 @@ public class Player implements IStorable{
     public void setName(String name){
         this.name = name;
     }
-    public String getAdress(){
+    public Adress getAdress(){
         return adress;
     }
-    public void setAdress(String adress){
+    public void setAdress(Adress adress){
         this.adress = adress;
     }
     public Set<Tournament> getTournaments(){

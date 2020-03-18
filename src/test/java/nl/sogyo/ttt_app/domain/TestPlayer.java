@@ -9,7 +9,7 @@ class TestPlayer{
     public void TestPlayerHasRating(){
         Player player = new Player();
         int rating = player.getRating();
-        assertEquals(0, rating);
+        assertEquals(800, rating);
     }
 
 }

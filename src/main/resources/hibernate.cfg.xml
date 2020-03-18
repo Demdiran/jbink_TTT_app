@@ -26,6 +26,7 @@
 		<mapping class="nl.sogyo.ttt_app.domain.Match" />
 		<mapping class="nl.sogyo.ttt_app.domain.Game" />
 		<mapping class="nl.sogyo.ttt_app.api.OutsideIDPlayerID" />
+		<mapping class="nl.sogyo.ttt_app.domain.Adress"/>
 	</session-factory>
 	
 </hibernate-configuration>

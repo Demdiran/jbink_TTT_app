@@ -12,32 +12,34 @@
 </head>
 <body>
     <div id="app">
-        <template v-if="!loggedin">
-            <loginscreen v-on:logging-in="login"></loginscreen>
-        </template>
+        <profileeditor 
+            v-if="editingprofile" 
+            v-bind:user="user" 
+            v-on:change-profile-information="editprofile">
+        </profileeditor>
         <template v-else>
-            <accountview 
-                v-bind:user="user" 
-                v-bind:editingprofile="editingprofile" 
-                v-on:edit-profile="editingprofile=true">
-            </accountview>           
-            <profileeditor 
-                v-if="editingprofile" 
-                v-bind:user="user" 
-                v-on:change-profile-information="editprofile">
-            </profileeditor>
-            <logoutbutton 
-                v-on:log-out="logout">
-            </logoutbutton>
+            <template v-if="!loggedin">
+                <loginscreen v-on:logging-in="login"></loginscreen>
+            </template>
+            <template v-else>
+                <accountview 
+                    v-bind:user="user" 
+                    v-bind:editingprofile="editingprofile" 
+                    v-on:edit-profile="editingprofile=true">
+                </accountview>
+                <logoutbutton 
+                    v-on:log-out="logout">
+                </logoutbutton>
+            </template>
+            <tournamentlist
+                id="tournamentlist" 
+                v-bind:tournaments="tournaments"
+                v-bind:loggedin="loggedin" 
+                v-on:create-tournament="creatingtournament=true"
+                v-on:sign-up="signUpForTournament">
+            </tournamentlist>
+            <tournamentcreator v-if="creatingtournament" v-on:create-tournament="createtournament"></tournamentcreator>
         </template>
-        <tournamentlist
-            id="tournamentlist" 
-            v-bind:tournaments="tournaments"
-            v-bind:loggedin="loggedin" 
-            v-on:create-tournament="creatingtournament=true"
-            v-on:sign-up="signUpForTournament">
-        </tournamentlist>
-        <tournamentcreator v-if="creatingtournament" v-on:create-tournament="createtournament"></tournamentcreator>
     </div>
 
       <script>
@@ -176,8 +178,8 @@
             },
             created:
                 function () {
-                    this.getTournaments();
                     this.login();
+                    this.getTournaments();
             },
             methods: {
                 async login(){
@@ -192,8 +194,9 @@
                     });
                     if(response.status != 401){
                         const user = await response.json();
-                        this.user = user;
                         console.log(user);
+                        this.user = user;
+                        this.editingprofile = true;
                     }
                 },
                 async logout(){

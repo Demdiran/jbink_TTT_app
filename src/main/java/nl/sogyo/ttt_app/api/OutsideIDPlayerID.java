@@ -1,13 +1,14 @@
 package nl.sogyo.ttt_app.api;
 
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity(name = "OutsideIDPlayerID")
-@Table(name = "outsideID_PlayerID")
-public class OutsideIDPlayerID{
+@Table(name = "outsideid_Playerid")
+public class OutsideIDPlayerID implements IStorable{
     @Id
     @Column(name = "outside_ID")
     private String outside_ID;

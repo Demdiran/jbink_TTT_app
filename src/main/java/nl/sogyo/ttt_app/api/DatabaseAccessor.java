@@ -1,5 +1,6 @@
 package nl.sogyo.ttt_app.api;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -12,7 +13,6 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
-import nl.sogyo.ttt_app.domain.Player;
 
 class DatabaseAccessor{
 	private Session hibernateSession;
@@ -46,33 +46,6 @@ class DatabaseAccessor{
 		}
 	}
 
-	public Player getOrCreatePlayerWithOutsideID(String outside_ID){
-		Player result = null;
-        try {
-			hibernateSession.beginTransaction();
-			OutsideIDPlayerID outsideIDPlayerID = hibernateSession.get(OutsideIDPlayerID.class, outside_ID);
-			if(outsideIDPlayerID == null){
-				result = new Player();
-				hibernateSession.persist(result);
-				outsideIDPlayerID = new OutsideIDPlayerID();
-				outsideIDPlayerID.setOutside_ID(outside_ID);
-				outsideIDPlayerID.setPlayer_ID(result.getID());
-				hibernateSession.persist(outsideIDPlayerID);
-			}
-			else{
-				result = hibernateSession.get(Player.class, outsideIDPlayerID.getPlayer_ID());
-			}
-			hibernateSession.getTransaction().commit();            
-        } catch (Exception sqlException) {
-			if (null != hibernateSession.getTransaction()) {
-				System.out.println("\n.......Transaction Is Being Rolled Back.......");
-				hibernateSession.getTransaction().rollback();
-			}
-			sqlException.printStackTrace();
-		}
-		return result;
-	}
-
 	public <T extends IStorable> List<T> getAllFromDB(Class<T> typeToGet){
 		List<T> toGet = null;
         try {
@@ -92,8 +65,8 @@ class DatabaseAccessor{
 		return toGet;
 	}
 	
-	public <T extends IStorable> IStorable getFromDB(int ID, Class<T> typeToGet){
-		IStorable toGet = null;
+	public <T extends IStorable> T getFromDB(Serializable ID, Class<T> typeToGet){
+		T toGet = null;
         try {
 			hibernateSession.beginTransaction();
 			toGet = hibernateSession.get(typeToGet, ID);

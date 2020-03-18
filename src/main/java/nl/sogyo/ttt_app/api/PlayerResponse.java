@@ -3,6 +3,7 @@ package nl.sogyo.ttt_app.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.sogyo.ttt_app.domain.Adress;
 import nl.sogyo.ttt_app.domain.Player;
 import nl.sogyo.ttt_app.domain.Tournament;
 
@@ -11,7 +12,7 @@ class PlayerResponse {
     private int rating;
     private String name;
     private List<TournamentResponse> tournaments = new ArrayList<TournamentResponse>();
-    private String adress;
+    private Adress adress;
     PlayerResponse(Player player){
         this.player_ID = player.getID();
         this.rating = player.getRating();
@@ -24,7 +25,7 @@ class PlayerResponse {
     PlayerResponse(){
     }
 
-    public void setAdress(String adress) {
+    public void setAdress(Adress adress) {
         this.adress = adress;
     }
     public void setName(String name) {
@@ -39,7 +40,7 @@ class PlayerResponse {
     public void setTournaments(List<TournamentResponse> tournaments) {
         this.tournaments = tournaments;
     }
-    public String getAdress() {
+    public Adress getAdress() {
         return adress;
     }
     public int getID() {
