@@ -56,6 +56,10 @@ public class Player implements IStorable{
         this.name = name;
     }
 
+    public Player(int rating){
+        this.rating = rating;
+    }
+
     public int getID(){
         return player_ID;
     }

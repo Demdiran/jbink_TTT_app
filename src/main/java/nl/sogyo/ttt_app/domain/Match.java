@@ -66,6 +66,9 @@ public class Match implements IStorable{
     public List<Game> getGames() {
         return games;
     }
+    public Player[] getPlayers(){
+        return players;
+    }
 
     public void gamePlayed(Game game){
         games.add(game);
