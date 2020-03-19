@@ -66,7 +66,6 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
 				int userID = outsideIDPlayerID.getPlayer_ID();
 				Player player = databaseAccessor.getFromDB(userID, Player.class);
 				Adresshandler distanceCalculator = new Adresshandler();
-				System.out.println("User adress: " + player.getAdress() + " Tournament adress: " + tournament.getAdress());
 				double distance = distanceCalculator.calculateDistance(player.getAdress(), tournament.getAdress());
 				tournamentResponse.setDistanceToUser(distance);
 			}
@@ -77,11 +76,41 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
 	}
 
 	@PostMapping("/createTournament")
-	public TournamentResponse createTournament(@AuthenticationPrincipal OAuth2User principal, @RequestBody Tournament tournament){
+	public TournamentResponse createTournament(@AuthenticationPrincipal OAuth2User principal, @RequestBody TournamentResponse tournamentToCreate){
 		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
+		Adresshandler adresshandler = new Adresshandler();
+		Tournament tournament = new Tournament();
+		tournament.copyGeneralInfo(tournamentToCreate);
+
 		databaseAccessor.createInDB(tournament);
+		int userID = databaseAccessor.getFromDB(principal.getName(), OutsideIDPlayerID.class).getPlayer_ID();
+		Player player = databaseAccessor.getFromDB(userID, Player.class);
+
+		double distance = adresshandler.calculateDistance(player.getAdress(), tournament.getAdress());
+		TournamentResponse response = new TournamentResponse(tournament);
+		response.setDistanceToUser(distance);
+
 		databaseAccessor.closeSession();
-		return new TournamentResponse(tournament);
+		return response;
+	}
+
+	@PostMapping("/editTournament")
+	public TournamentResponse editTournament(@AuthenticationPrincipal OAuth2User principal, @RequestBody TournamentResponse tournamentToEdit){
+		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
+		Adresshandler adresshandler = new Adresshandler();
+		Tournament tournament = databaseAccessor.getFromDB(tournamentToEdit.getTournamentID(), Tournament.class);
+		tournament.copyGeneralInfo(tournamentToEdit);
+		databaseAccessor.updateInDB(tournament);
+
+		int userID = databaseAccessor.getFromDB(principal.getName(), OutsideIDPlayerID.class).getPlayer_ID();
+		Player player = databaseAccessor.getFromDB(userID, Player.class);
+
+		double distance = adresshandler.calculateDistance(player.getAdress(), tournament.getAdress());
+		TournamentResponse response = new TournamentResponse(tournament);
+		response.setDistanceToUser(distance);
+
+		databaseAccessor.closeSession();
+		return response;
 	}
 
 	@PostMapping("/signUpForTournament")
@@ -103,7 +132,7 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
 		Boolean adressValid = false;
 		Adresshandler adresshandler = new Adresshandler();
 		try {
-			adressValid = adresshandler.checkAdressMatchesPostalcode(adress);
+			adressValid = adresshandler.checkAdressMatchesPostalcodeAndSetLonLat(adress);
 		} catch (ApiException e) {
 			response.setStatus(e.getCode());
 		}

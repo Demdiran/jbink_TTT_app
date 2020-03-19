@@ -17,6 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import nl.sogyo.ttt_app.api.IStorable;
+import nl.sogyo.ttt_app.api.TournamentResponse;
 @Entity
 @Table(name = "tournaments")
 public class Tournament implements IStorable{
@@ -91,5 +92,13 @@ public class Tournament implements IStorable{
 
     public void playerSignUp(Player player){
         participants.add(player);
+    }
+
+    public void copyGeneralInfo(TournamentResponse tournamentResponse){
+        this.name = tournamentResponse.getName();
+        this.adress = tournamentResponse.getAdress();
+        this.club = tournamentResponse.getClub();
+        this.maxParticipants = tournamentResponse.getMaxParticipants();
+        this.tournamentDate = tournamentResponse.getTournamentDate();
     }
 }

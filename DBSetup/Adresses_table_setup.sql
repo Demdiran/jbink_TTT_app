@@ -5,5 +5,7 @@ create table `adresses`(
 `streetnumber`		varchar(4) not null default '',
 `city`				varchar(50) not null default '',
 `postalcode`		varchar(6) not null default '',
+`longitude`			double,
+`lattitude`			double,
 primary key(`adress_ID`)
 );

@@ -24,6 +24,10 @@ public class Adress implements IStorable{
     private String streetnumber = "";
     @Column(name = "postalcode")
     private String postalcode = "";
+    @Column(name = "longitude")
+    private double longitude;
+    @Column(name = "lattitude")
+    private double lattitude;
 
     public int getAdress_ID() {
         return adress_ID;
@@ -40,6 +44,12 @@ public class Adress implements IStorable{
     public String getStreet() {
         return street;
     }
+    public double getLattitude() {
+        return lattitude;
+    }
+    public double getLongitude() {
+        return longitude;
+    }
     public void setAdress_ID(int adress_ID) {
         this.adress_ID = adress_ID;
     }
@@ -54,5 +64,11 @@ public class Adress implements IStorable{
     }
     public void setStreet(String street) {
         this.street = street;
+    }
+    public void setLattitude(double lattitude) {
+        this.lattitude = lattitude;
+    }
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 }

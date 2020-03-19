@@ -40,10 +40,22 @@
                 id="tournamentlist" 
                 v-bind:tournaments="tournaments"
                 v-bind:loggedin="loggedin" 
-                v-on:create-tournament="creatingtournament=true"
+                v-on:create-tournament="startTournamentCreation"
+                v-on:edit-tournament="startTournamentEdit"
                 v-on:sign-up="signUpForTournament">
             </tournamentlist>
-            <tournamentcreator v-if="creatingtournament" v-on:create-tournament="createtournament"></tournamentcreator>
+            <tournamentcreator 
+                v-if="creatingtournament" 
+                v-on:create-tournament="createtournament" 
+                v-bind:tournamentprop="tournamenttoedit"
+                v-bind:message="edittournamentmessage">
+            </tournamentcreator>
+            <tournamenteditor 
+                v-if="editingtournament" 
+                v-on:edit-tournament="edittournament" 
+                v-bind:tournamentprop="tournamenttoedit"
+                v-bind:message="edittournamentmessage">
+            </tournamenteditor>
         </template>
     </div>
 
@@ -79,7 +91,7 @@
                     <ul>
                         <li>Name: <input v-model="username"/></li>
                         <li>Rating: <input v-model="userrating" /></li>
-                        <li>Street: <input v-model="useradress.street" /> <input v-model="useradress.streetnumber" id="nrinput" placeholder="nr."/></li>
+                        <li>Street: <input v-model="useradress.street" /> <input v-model="useradress.streetnumber" class="nrinput" placeholder="nr."/></li>
                         <li>City: <input v-model="useradress.city" /></li>
                         <li>Postal code: <input v-model="useradress.postalcode" placeholder="1234AB" /></li>
                     </ul>
@@ -94,30 +106,56 @@
             }
         });
         Vue.component('tournamentcreator', {
+            props: [ 'tournamentprop', 'message' ],
             data(){
                 return {
-                    name: "",
-                    club: "",
-                    adress: "",
-                    date: "",
-                    maxParticipants: "",
+                    tournament: this.tournamentprop
                 }
             },
             template: `
                 <div class="informationcolumn">
                     <ul>
-                        <li><input v-model="name" placeholder="Tournament name" /></li>
-                        <li><input v-model="club" placeholder="Club" /></li>
-                        <li><input v-model="adress" placeholder="Adress" /></li>
-                        <li><input v-model="date" type="datetime-local" /></li>
-                        <li><input v-model="maxParticipants" type="text" placeholder="Maximum number of participants" /></li>
+                        <li><input v-model="tournament.name" placeholder="Tournament name" /></li>
+                        <li><input v-model="tournament.club" placeholder="Club" /></li>
+                        <li>Street: <input v-model="tournament.adress.street" /> <input v-model="tournament.adress.streetnumber" class="nrinput" placeholder="nr."/></li>
+                        <li>City: <input v-model="tournament.adress.city" /></li>
+                        <li>Postal code: <input v-model="tournament.adress.postalcode" placeholder="1234AB" /></li>
+                        <li><input v-model="tournament.tournamentDate" type="datetime-local" /></li>
+                        <li><input v-model="tournament.maxParticipants" type="text" placeholder="Maximum number of participants" /></li>
                     </ul>
-                    <button v-on:click="submit">Submit</button>
+                    <button v-on:click="submit">Submit</button><span v-if="message != undefined">{{message}}</span>
                 </div>
             `,
             methods: {
                 submit(){
-                    this.$emit('create-tournament', this.name, this.club, this.adress, this.date, this.maxParticipants);
+                    this.$emit('create-tournament', this.tournament);
+                }
+            }
+        });
+        Vue.component('tournamenteditor', {
+            props: [ 'tournamentprop', 'message' ],
+            data(){
+                return {
+                    tournament: this.tournamentprop
+                }
+            },
+            template: `
+                <div class="informationcolumn">
+                    <ul>
+                        <li><input v-model="tournament.name" placeholder="Tournament name" /></li>
+                        <li><input v-model="tournament.club" placeholder="Club" /></li>
+                        <li>Street: <input v-model="tournament.adress.street" /> <input v-model="tournament.adress.streetnumber" class="nrinput" placeholder="nr."/></li>
+                        <li>City: <input v-model="tournament.adress.city" /></li>
+                        <li>Postal code: <input v-model="tournament.adress.postalcode" placeholder="1234AB" /></li>
+                        <li><input v-model="tournament.tournamentDate" type="datetime-local" /></li>
+                        <li><input v-model="tournament.maxParticipants" type="text" placeholder="Maximum number of participants" /></li>
+                    </ul>
+                    <button v-on:click="submit">Submit</button><span v-if="message != undefined">{{message}}</span>
+                </div>
+            `,
+            methods: {
+                submit(){
+                    this.$emit('edit-tournament', this.tournament);
                 }
             }
         });
@@ -155,12 +193,16 @@
                         <li 
                             v-for="tournament in tournaments">
                                 <div class="informationbox">
-                                    {{tournament.club}}'s {{tournament.name}}</br>
-                                    Where? {{tournament.adress}}</br>
+                                    {{tournament.club}}'s {{tournament.name}}</br>                                    
+                                    <ul>
+                                        <li>{{tournament.adress.street}} {{tournament.adress.streetnumber}}</li>
+                                        <li>{{tournament.adress.city}}, {{tournament.adress.postalcode}}</li>
+                                    </ul>
                                     When? {{tournament.tournamentDate}}</br>
                                     Max. {{tournament.maxParticipants}} participants</br>
                                     <span v-if="loggedin">Distance is {{tournament.distanceToUser.toFixed(1)}} kilometers</span></br>
                                     <div class="button" v-if="loggedin" v-on:click="signup(tournament)">Sign up</div>
+                                    <div class="button" v-if="loggedin" v-on:click="edittournament(tournament)">Edit</div>
                                 </div>
                         </li>
                     </ul>
@@ -168,6 +210,9 @@
                 </div>
             `,
             methods: {
+                edittournament(tournament){
+                    this.$emit('edit-tournament', tournament);
+                },
                 createtournament(){
                     this.$emit('create-tournament');
                 },
@@ -183,7 +228,10 @@
                 tournaments : undefined,
                 editingprofile : false,
                 editprofilemessage: undefined,
-                creatingtournament : false
+                edittournamentmessage: undefined,
+                creatingtournament : false,
+                tournamenttoedit: undefined,
+                editingtournament: false
             },
             computed: {
                 loggedin(){
@@ -228,18 +276,19 @@
                     this.user = undefined;
                 },
                 async checkInputAndEditProfile(username, useradress, userrating){
-                    let inputvalid = this.checkInput(username, useradress, userrating);
+                    let inputvalid = await this.checkInput(username, useradress, userrating);
                     if(inputvalid){
                         this.updateProfile(username, useradress, userrating);
+                        this.getTournaments();
                     }
                 },
                 async checkInput(username, useradress, userrating){                    
-                    let namevalid = this.checkUsername(username);
-                    let adressvalid = this.checkAdress(useradress);
+                    let namevalid = this.checkName(username);
+                    let adressvalid = await this.checkAdress(useradress);
                     let ratingvalid = this.checkRating(userrating);
                     return namevalid && adressvalid && ratingvalid;
                 },
-                checkUsername(name){
+                checkName(name){
                     return name != null;
                 },
                 checkRating(rating){
@@ -295,23 +344,55 @@
                     const tournaments = await response.json();
                     this.tournaments = tournaments;
                 },
-                async createtournament(name, club, adress, date, maxParticipants){
-                    this.creatingtournament = false;
-                    var cookie = this.getCookie("XSRF-TOKEN");
-                    const response = await fetch("/createTournament", {
-                        method: "POST",
-                        headers: {
-                            'X-XSRF-TOKEN': cookie,
-                            'Accept' : 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({name: name, club: club, adress: adress, tournamentDate: date, maxParticipants: maxParticipants})
-                    });
-                    tournament = await response.json();
-                    this.tournaments.push(tournament);
+                async createtournament(tournament){
+                    let namevalid = this.checkName(tournament.name);
+                    let adressvalid = await this.checkAdress(tournament.adress);
+                    if(namevalid && adressvalid){
+                        var cookie = this.getCookie("XSRF-TOKEN");
+                        const response = await fetch("/createTournament", {
+                            method: "POST",
+                            headers: {
+                                'X-XSRF-TOKEN': cookie,
+                                'Accept' : 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(tournament)
+                        });
+                        tournament = await response.json();
+                        this.getTournaments();
+                        this.edittournamentmessage = undefined;
+                        this.creatingtournament = false;
+                        this.tournamenttoedit = undefined;
+                    }
+                    else{
+                        this.edittournamentmessage = "Input incomplete";
+                    }
+                },
+                async edittournament(tournament){
+                    let namevalid = this.checkName(tournament.name);
+                    let adressvalid = await this.checkAdress(tournament.adress);
+                    if(namevalid && adressvalid){
+                        var cookie = this.getCookie("XSRF-TOKEN");
+                        const response = await fetch("/editTournament", {
+                            method: "POST",
+                            headers: {
+                                'X-XSRF-TOKEN': cookie,
+                                'Accept' : 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(tournament)
+                        });
+                        tournament = await response.json();
+                        this.getTournaments();
+                        this.edittournamentmessage = undefined;
+                        this.editingtournament = false;
+                        this.tournamenttoedit = undefined;
+                    }
+                    else{
+                        this.edittournamentmessage = "Input incomplete";
+                    }
                 },
                 async signUpForTournament(tournament){
-                    console.log(tournament);
                     var cookie = this.getCookie("XSRF-TOKEN");
                     var response = await fetch("/signUpForTournament?tournamentID=" + tournament.tournamentID, {
                         method: "POST",
@@ -346,6 +427,26 @@
                     else{
                         return "The adress and postal code do not match.";
                     }
+                },
+                startTournamentCreation(){
+                    this.tournamenttoedit = {
+                        tournamentDate: undefined,
+                        adress: {
+                            street: undefined,
+                            streetnumber: undefined,
+                            city: undefined,
+                            postalcode: undefined
+                        },
+                        club: undefined,
+                        maxParticipants: undefined,
+                        amountOfParticipants: undefined,
+                        distanceToUser: undefined
+                    };
+                    this.creatingtournament = true;
+                },
+                startTournamentEdit(tournament){
+                    this.tournamenttoedit = tournament;
+                    this.editingtournament = true;
                 }
             }
 

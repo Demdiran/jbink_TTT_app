@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import nl.sogyo.ttt_app.domain.Adress;
 import nl.sogyo.ttt_app.domain.Tournament;
 
-class TournamentResponse{
+public class TournamentResponse{
     private int tournamentID;
     private String name;
     private String club;

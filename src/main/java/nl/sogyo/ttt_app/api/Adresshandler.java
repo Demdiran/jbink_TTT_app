@@ -46,26 +46,10 @@ public class Adresshandler{
     }
 
     public double calculateDistance(Adress adress1, Adress adress2){
-        double lon1 = 0;
-        double lat1 = 0;
-        double lon2 = 0;
-        double lat2 = 0;
-        
-        try {
-          Location location = findLocation(adress1);
-          lon1 = Double.parseDouble(location.getLon());
-          lat1 = Double.parseDouble(location.getLat());
-
-          location = findLocation(adress2);
-          lon2 = Double.parseDouble(location.getLon());
-          lat2 = Double.parseDouble(location.getLat());
-        } catch (ApiException e) {
-          System.err.println("Exception when calling SearchApi#search");
-          System.err.println("Status code: " + e.getCode());
-          System.err.println("Reason: " + e.getResponseBody());
-          System.err.println("Response headers: " + e.getResponseHeaders());
-          e.printStackTrace();
-        }
+        double lon1 = adress1.getLongitude();
+        double lat1 = adress1.getLattitude();
+        double lon2 = adress2.getLongitude();
+        double lat2 = adress2.getLattitude();
         return calculateDistanceFromDegrees(lon1, lat1, lon2, lat2);
     }
 
@@ -84,8 +68,10 @@ public class Adresshandler{
       return degrees * Math.PI / 180;
     }
 
-    public boolean checkAdressMatchesPostalcode(Adress adress)throws ApiException{
+    public boolean checkAdressMatchesPostalcodeAndSetLonLat(Adress adress)throws ApiException{
       Location location = findLocation(adress);
+      adress.setLongitude(Double.parseDouble(location.getLon()));
+      adress.setLattitude(Double.parseDouble(location.getLat()));
       return location.getAddress().getPostcode().equals(adress.getPostalcode());
     }
 
@@ -95,7 +81,6 @@ public class Adresshandler{
       
       q = adress.getStreet() + " " + adress.getStreetnumber() + ", " + adress.getCity() + ", " + adress.getPostalcode();
       result = apiInstance.search(q, format, normalizecity, addressdetails, viewbox, bounded, limit, acceptLanguage, countrycodes, namedetails, dedupe, extratags, statecode, matchquality, postaladdress);
-      System.out.println(result.get(0));
       return result.get(0);
 
     }
