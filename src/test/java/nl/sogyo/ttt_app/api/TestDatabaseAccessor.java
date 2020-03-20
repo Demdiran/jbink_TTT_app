@@ -197,7 +197,7 @@ public class TestDatabaseAccessor{
         Match match = new Match();
 
         Game game1 = new Game(11, 12);
-        match.gamePlayed(game1);
+        match.addGame(game1);
         databaseAccessor.createInDB(match);
 
         hibernateSession.clear();
@@ -211,7 +211,7 @@ public class TestDatabaseAccessor{
     public void TestRemoveGameFromMatchRemovesFromDB(){
         Match match = new Match();
         Game game1 = new Game(11, 12);
-        match.gamePlayed(game1);
+        match.addGame(game1);
         databaseAccessor.createInDB(match);
 
         hibernateSession.clear();

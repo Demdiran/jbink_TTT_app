@@ -53,6 +53,11 @@ public class Game implements IStorable{
         this.pointsPlayer2 = pointsPlayer2;
     }
 
+    public void setScore(int pointsPlayer1, int pointsPlayer2){
+        setPointsPlayer1(pointsPlayer1);
+        setPointsPlayer2(pointsPlayer2);
+    }
+
     public void pointForPlayer1(){
         pointsPlayer1++;
     }
@@ -64,10 +69,10 @@ public class Game implements IStorable{
         if(Math.abs(pointsPlayer1 - pointsPlayer2) < 2){
             return null;
         }
-        else if(pointsPlayer1 > Math.max(pointsPlayer2, 11)){
+        else if(pointsPlayer1 >= Math.max(pointsPlayer2, 11)){
             return "player1";
         }
-        else if(pointsPlayer2 > Math.max(pointsPlayer1, 11)){
+        else if(pointsPlayer2 >= Math.max(pointsPlayer1, 11)){
             return "player2";
         }
         else{

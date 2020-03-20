@@ -70,12 +70,16 @@ public class Match implements IStorable{
         return players;
     }
 
-    public void gamePlayed(Game game){
+    public void addGame(Game game){
         games.add(game);
     }
 
     public void removeGame(int index){
         games.remove(index);
+    }
+
+    public boolean isFinished(){
+        return getWinner(3) != null;
     }
 
     public Player getWinner(int gamesToWin){
@@ -87,9 +91,9 @@ public class Match implements IStorable{
             if(game.getWinner().equals("player2"))
                 scorePlayer2++;
         }
-        if(scorePlayer1 > gamesToWin)
+        if(scorePlayer1 >= gamesToWin)
             return players[0];
-        if(scorePlayer2 > gamesToWin)
+        if(scorePlayer2 >= gamesToWin)
             return players[1];
         return null;
     }
