@@ -25,10 +25,6 @@ public class TournamentPlanning{
     }
 
     public TournamentRound getCurrentRound(){
-        for(TournamentRound round : rounds){
-            if(!round.isFinished())
-                return round;
-        }
         return rounds.get(rounds.size() - 1);
     }
 
@@ -66,5 +62,17 @@ public class TournamentPlanning{
         List<Player> orderedTournamentPlayers = orderTournamentPlayers(firstHalf);
         orderedTournamentPlayers.addAll(orderTournamentPlayers(secondHalf));
         return orderedTournamentPlayers;
+    }
+
+    public Match getNextMatch(){
+        return getCurrentRound().getNextMatch();
+    }
+
+    public Player getTournamentWinner(){
+        return getCurrentRound().getTournamentWinner();
+    }
+
+    public boolean hasWinner(){
+        return getCurrentRound().hasWinner();
     }
 }

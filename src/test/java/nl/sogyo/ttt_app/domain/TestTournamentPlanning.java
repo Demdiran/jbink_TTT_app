@@ -178,4 +178,121 @@ public class TestTournamentPlanning{
         catch(NoPlayersSignedUpForTournament e){}
     }
 
+    @Test
+    public void TestGetNextMatch(){
+        Player[] players = new Player[8];
+        for(int i = 0; i < players.length; i++){
+            players[i] = new Player(800 - i);
+            players[i].setName("" + i);
+        }
+        TournamentPlanning tournamentPlanning = new TournamentPlanning(players);
+        TournamentRound tournamentRound1 = tournamentPlanning.getCurrentRound();
+        Match match1 = tournamentPlanning.getNextMatch();
+        assertEquals(tournamentRound1.getMatches().get(0), match1);
+    }
+
+    @Test
+    public void TestGetNextMatchRoundFinished(){
+        Player[] players = new Player[8];
+        for(int i = 0; i < players.length; i++){
+            players[i] = new Player(800 - i);
+            players[i].setName("" + i);
+        }
+        TournamentPlanning tournamentPlanning = new TournamentPlanning(players);
+        TournamentRound tournamentRound1 = tournamentPlanning.getCurrentRound();
+        for(Match match : tournamentRound1.getMatches()){
+            match.addGame(new Game(11,9));
+            match.addGame(new Game(11,9));
+            match.addGame(new Game(11,9));
+        }
+        try{
+            tournamentPlanning.getNextMatch();
+            fail("If the current round has finished, there is no next match and an exception occurs");
+        }
+        catch(RoundHasFinished e){}
+    }
+
+    @Test
+    public void TestGetWinner(){
+        Player[] players = new Player[8];
+        for(int i = 0; i < players.length; i++){
+            players[i] = new Player(800 - i);
+            players[i].setName("" + i);
+        }
+        TournamentPlanning tournamentPlanning = new TournamentPlanning(players);
+        TournamentRound tournamentRound1 = tournamentPlanning.getCurrentRound();
+        for(Match match : tournamentRound1.getMatches()){
+            match.addGame(new Game(11,9));
+            match.addGame(new Game(11,9));
+            match.addGame(new Game(11,9));
+        }
+        TournamentRound tournamentRound2 = tournamentPlanning.planNextRound();
+        for(Match match : tournamentRound2.getMatches()){
+            match.addGame(new Game(11,0));
+            match.addGame(new Game(11,0));
+            match.addGame(new Game(11,0));
+        }
+        TournamentRound tournamentRound3 = tournamentPlanning.planNextRound();
+        Match finals = tournamentRound3.getMatches().get(0);
+        finals.addGame(new Game(3, 11));
+        finals.addGame(new Game(3, 11));
+        finals.addGame(new Game(3, 11));
+        Player winner = tournamentPlanning.getTournamentWinner();
+        assertEquals(players[1], winner, winner.getName());
+    }
+
+    @Test
+    public void TestGetWinnerTournamentNotFinished(){
+        Player[] players = new Player[8];
+        for(int i = 0; i < players.length; i++){
+            players[i] = new Player(800 - i);
+            players[i].setName("" + i);
+        }
+        TournamentPlanning tournamentPlanning = new TournamentPlanning(players);
+        TournamentRound tournamentRound1 = tournamentPlanning.getCurrentRound();
+        for(Match match : tournamentRound1.getMatches()){
+            match.addGame(new Game(11,9));
+            match.addGame(new Game(11,9));
+            match.addGame(new Game(11,9));
+        }
+        TournamentRound tournamentRound2 = tournamentPlanning.planNextRound();
+        for(Match match : tournamentRound2.getMatches()){
+            match.addGame(new Game(11,0));
+            match.addGame(new Game(11,0));
+            match.addGame(new Game(11,0));
+        }
+        Player winner = tournamentPlanning.getTournamentWinner();
+        assertEquals(null, winner);
+    }
+
+    @Test
+    public void TestHasWinner(){
+        Player[] players = new Player[8];
+        for(int i = 0; i < players.length; i++){
+            players[i] = new Player(800 - i);
+            players[i].setName("" + i);
+        }
+        TournamentPlanning tournamentPlanning = new TournamentPlanning(players);
+        TournamentRound tournamentRound1 = tournamentPlanning.getCurrentRound();
+        for(Match match : tournamentRound1.getMatches()){
+            match.addGame(new Game(11,9));
+            match.addGame(new Game(11,9));
+            match.addGame(new Game(11,9));
+        }
+        TournamentRound tournamentRound2 = tournamentPlanning.planNextRound();
+        for(Match match : tournamentRound2.getMatches()){
+            match.addGame(new Game(11,0));
+            match.addGame(new Game(11,0));
+            match.addGame(new Game(11,0));
+        }
+        TournamentRound tournamentRound3 = tournamentPlanning.planNextRound();
+        Match finals = tournamentRound3.getMatches().get(0);
+        finals.addGame(new Game(3, 11));
+        finals.addGame(new Game(3, 11));
+        finals.addGame(new Game(3, 11));
+
+        boolean haswinner = tournamentPlanning.hasWinner();
+        assert(haswinner);
+
+    }
 }
