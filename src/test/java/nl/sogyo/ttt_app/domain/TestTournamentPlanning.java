@@ -1,5 +1,6 @@
 package nl.sogyo.ttt_app.domain;
 
+import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
@@ -61,7 +62,7 @@ public class TestTournamentPlanning{
         match2.addGame(new Game(11, 8));
         match2.addGame(new Game(11, 8));
         match2.addGame(new Game(11, 8));
-        
+
         tournamentRound = tournamentPlanning.planNextRound();
         match1 = tournamentRound.getMatches().get(0);
         match2 = tournamentRound.getMatches().get(1);
@@ -69,6 +70,31 @@ public class TestTournamentPlanning{
         assertEquals(match1.getPlayers()[1].getRating(), 200);
         assertEquals(match2.getPlayers()[0].getRating(), 300);
         assertEquals(match2.getPlayers()[1].getRating(), 250);
+    }
+
+    @Test
+    public void TestGetSecondRoundWithoutFirstCompleted(){
+        Player[] players = new Player[6];
+        players[0] = new Player(100);
+        players[3] = new Player(150);
+        players[2] = new Player(200);
+        players[5] = new Player(250);
+        players[1] = new Player(300);
+        players[4] = new Player(350);
+        TournamentPlanning tournamentPlanning = new TournamentPlanning(players);
+        try {
+            tournamentPlanning.planNextRound();
+            fail("Requesting the next round while the current round has not finished should result in an exception.");            
+        } catch (CurrentRoundNotFinished e){}
+    }
+
+    @Test
+    public void TestPlanRoundWithoutPlayers(){
+        try{
+            new TournamentPlanning();
+            fail("Tournamentplanning should throw an exception if no players are signed up.");
+        }
+        catch(NoPlayersSignedUpForTournament e){}
     }
 
 }

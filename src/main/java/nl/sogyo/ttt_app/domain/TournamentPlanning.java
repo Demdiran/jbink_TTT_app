@@ -28,6 +28,7 @@ public class TournamentPlanning{
 
     public TournamentRound planNextRound(){
         TournamentRound currentRound = getCurrentRound();
+
         if(currentRound.isFinished()){
             Player[] playersOfNextRound = currentRound.getWinners();
             Arrays.sort(playersOfNextRound, Comparator.comparing(Player::getRating).reversed());
@@ -39,7 +40,7 @@ public class TournamentPlanning{
             return nextRound;
         }
         else{
-            return null;
+            throw new CurrentRoundNotFinished();
         }
     }
 }
