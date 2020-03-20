@@ -49,12 +49,15 @@ public class TestTournamentRound{
         tournamentRound.planMatch(player3, player4);
         Match match1 = tournamentRound.getMatches().get(0);
         Match match2 = tournamentRound.getMatches().get(1);
+        
         match1.addGame(new Game(11,9));
         match1.addGame(new Game(11,9));
         match1.addGame(new Game(11,9));
+
         match2.addGame(new Game(11,9));
         match2.addGame(new Game(11,9));
         match2.addGame(new Game(11,9));
+
         assert(tournamentRound.isFinished());
     }
 }

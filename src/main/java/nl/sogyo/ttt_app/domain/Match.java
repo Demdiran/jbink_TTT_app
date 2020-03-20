@@ -42,6 +42,10 @@ public class Match implements IStorable{
     public Match(){
     }
 
+    public Match(Player byePlayer){
+        this.players[0] = byePlayer;
+    }
+
     public Match(Player player1, Player player2){
         this.players[0] = player1;
         this.players[1] = player2;
@@ -83,6 +87,8 @@ public class Match implements IStorable{
     }
 
     public Player getWinner(int gamesToWin){
+        if(players[1] == null)
+            return players[0];
         int scorePlayer1 = 0;
         int scorePlayer2 = 0;
         for(Game game : games){
