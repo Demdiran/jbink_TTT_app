@@ -44,7 +44,7 @@ public class Player implements IStorable{
     )
     private Set<Tournament> tournaments = new HashSet<Tournament>();
 
-    @ManyToMany(mappedBy = "players", fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<Match> matches = new HashSet<Match>();
 
     public Player(){

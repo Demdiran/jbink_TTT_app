@@ -95,11 +95,12 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
 	}
 
 	@PostMapping("/editTournament")
-	public TournamentResponse editTournament(@AuthenticationPrincipal OAuth2User principal, @RequestBody TournamentResponse tournamentToEdit){
+	public TournamentResponse editTournament(@AuthenticationPrincipal OAuth2User principal, @RequestBody TournamentResponse tournamentToEdit)throws ApiException{
 		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
 		Adresshandler adresshandler = new Adresshandler();
 		Tournament tournament = databaseAccessor.getFromDB(tournamentToEdit.getTournamentID(), Tournament.class);
 		tournament.copyGeneralInfo(tournamentToEdit);
+		tournament.setAdress(adresshandler.setLonLat(tournament.getAdress()));
 		databaseAccessor.updateInDB(tournament);
 
 		int userID = databaseAccessor.getFromDB(principal.getName(), OutsideIDPlayerID.class).getPlayer_ID();
@@ -141,18 +142,36 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
 		Boolean adressValid = false;
 		Adresshandler adresshandler = new Adresshandler();
 		try {
-			adressValid = adresshandler.checkAdressMatchesPostalcodeAndSetLonLat(adress);
+			adressValid = adresshandler.checkAdressMatchesPostalcode(adress);
 		} catch (ApiException e) {
 			response.setStatus(e.getCode());
 		}
 		return adressValid;
 	}
 
-	@PostMapping("/editprofile")
-	public void editprofile(@AuthenticationPrincipal OAuth2User principal, @RequestBody PlayerResponse user){
+	@PostMapping("/createPlayers")
+	public void createPlayers(@AuthenticationPrincipal OAuth2User principal){
 		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
+		int userID = databaseAccessor.getFromDB(principal.getName(), OutsideIDPlayerID.class).getPlayer_ID();
+		Player player = databaseAccessor.getFromDB(userID, Player.class);
+		for(int i = 0; i < 10; i++){
+			Player testPlayer = new Player(i + 100);
+			testPlayer.setName("testplayer" + i);
+			testPlayer.setAdress(player.getAdress());
+			databaseAccessor.createInDB(testPlayer);
+			databaseAccessor.updateInDB(player);
+			Match match = new Match(player, testPlayer);
+			databaseAccessor.createInDB(match);
+		}
+	}
+
+	@PostMapping("/editprofile")
+	public void editprofile(@AuthenticationPrincipal OAuth2User principal, @RequestBody PlayerResponse user)throws ApiException{
+		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
+		Adresshandler adresshandler = new Adresshandler();
 		Player player = databaseAccessor.getFromDB(user.getID(), Player.class);
 		player.copyGeneralInfo(user);
+		player.setAdress(adresshandler.setLonLat(player.getAdress()));
 		databaseAccessor.updateInDB(player);
 		databaseAccessor.closeSession();
 	}

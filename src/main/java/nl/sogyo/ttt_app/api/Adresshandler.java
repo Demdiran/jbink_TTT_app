@@ -68,11 +68,18 @@ public class Adresshandler{
       return degrees * Math.PI / 180;
     }
 
-    public boolean checkAdressMatchesPostalcodeAndSetLonLat(Adress adress)throws ApiException{
+    public boolean checkAdressMatchesPostalcode(Adress adress)throws ApiException{
       Location location = findLocation(adress);
       adress.setLongitude(Double.parseDouble(location.getLon()));
       adress.setLattitude(Double.parseDouble(location.getLat()));
       return location.getAddress().getPostcode().equals(adress.getPostalcode());
+    }
+
+    public Adress setLonLat(Adress adress)throws ApiException{
+      Location location = findLocation(adress);
+      adress.setLongitude(Double.parseDouble(location.getLon()));
+      adress.setLattitude(Double.parseDouble(location.getLat()));
+      return adress;
     }
 
     private Location findLocation(Adress adress)throws ApiException{

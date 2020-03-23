@@ -32,6 +32,7 @@
                     v-bind:editingprofile="editingprofile" 
                     v-on:edit-profile="editingprofile=true">
                 </accountview>
+                <button v-on:click="createPlayers">Create players</button>
                 <logoutbutton 
                     v-on:log-out="logout">
                 </logoutbutton>
@@ -432,6 +433,15 @@
                         }
                     });
                     tournament.canSignUp = false;
+                },
+                async createPlayers(){
+                    var cookie = this.getCookie("XSRF-TOKEN");
+                    var response = await fetch("/createPlayers", {
+                        method: "POST",
+                        headers: {
+                            'X-XSRF-TOKEN': cookie
+                        }
+                    });
                 },
                 getCookie(cname) {
                     var name = cname + "=";

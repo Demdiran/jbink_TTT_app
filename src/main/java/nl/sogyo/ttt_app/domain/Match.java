@@ -32,7 +32,7 @@ public class Match implements IStorable{
         joinColumns = {@JoinColumn(name = "match_ID")},
         inverseJoinColumns = {@JoinColumn(name = "player_ID")}
     )
-    @OrderColumn
+    @OrderColumn(name = "players_order")
     private Player[] players = new Player[2];
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

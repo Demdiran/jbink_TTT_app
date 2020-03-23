@@ -35,7 +35,7 @@ public class TestAdresshandler{
 
         Adresshandler adresshandler = new Adresshandler();
         try {
-            assert(adresshandler.checkAdressMatchesPostalcodeAndSetLonLat(adress));            
+            assert(adresshandler.checkAdressMatchesPostalcode(adress));            
         }
         catch (ApiException e) {
             System.err.println("Exception when calling SearchApi#search");
@@ -56,7 +56,7 @@ public class TestAdresshandler{
 
         Adresshandler adresshandler = new Adresshandler();
         try {
-            assert(!adresshandler.checkAdressMatchesPostalcodeAndSetLonLat(adress));            
+            assert(!adresshandler.checkAdressMatchesPostalcode(adress));            
         }
         catch (ApiException e) {
             System.err.println("Exception when calling SearchApi#search");
