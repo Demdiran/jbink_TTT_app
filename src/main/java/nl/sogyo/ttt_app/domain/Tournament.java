@@ -29,6 +29,8 @@ public class Tournament implements IStorable{
     private String name;
     @Column(name = "club")
     private String club;
+    @Column(name = "open")
+    private boolean canSignUp = true;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "adress_ID")
@@ -88,6 +90,15 @@ public class Tournament implements IStorable{
     }
     public Set<Player> getParticipants(){
         return participants;
+    }
+    public boolean getCanSignUp(){
+        return canSignUp;
+    }
+    public void setCanSignup(boolean canSignUp){
+        this.canSignUp = canSignUp;
+    }
+    public void closeForSignup(){
+        canSignUp = false;
     }
 
     public void playerSignUp(Player player){

@@ -201,8 +201,11 @@
                                     When? {{tournament.tournamentDate}}</br>
                                     Max. {{tournament.maxParticipants}} participants</br>
                                     <span v-if="loggedin">Distance is {{tournament.distanceToUser.toFixed(1)}} kilometers</span></br>
-                                    <div class="button" v-if="loggedin" v-on:click="signup(tournament)">Sign up</div>
-                                    <div class="button" v-if="loggedin" v-on:click="edittournament(tournament)">Edit</div>
+                                    <template v-if="loggedin">
+                                        <div class="button"  v-if="tournament.getCanSignUp" v-on:click="signup(tournament)">Sign up</div>
+                                        <div class="disabledbutton"  v-else>Sign up</div>
+                                        <div class="button"  v-on:click="edittournament(tournament)">Edit</div>
+                                    </template>
                                 </div>
                         </li>
                     </ul>

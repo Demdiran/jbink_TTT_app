@@ -6,6 +6,7 @@ create table `tournaments`(
 `date`					datetime,
 `adress_ID`				int,
 `max_participants`		int unsigned,
+`open` 					tinyint not null default 1,
 primary key(`tournament_ID`),
 constraint tournaments_adresses foreign key(`adress_ID`) references adresses (`adress_ID`)
 );
