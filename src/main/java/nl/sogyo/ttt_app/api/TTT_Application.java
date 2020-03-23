@@ -127,6 +127,15 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
 		return response;
 	}
 
+	@PostMapping("/closeTournament")
+	public void closeTournament(Integer tournamentID){
+		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
+		Tournament tournament = databaseAccessor.getFromDB(tournamentID, Tournament.class);
+		tournament.closeForSignup();
+		databaseAccessor.updateInDB(tournament);
+		databaseAccessor.closeSession();
+	}
+
 	@PostMapping("/checkadress")
 	public Boolean checkadress(@RequestBody Adress adress, HttpServletResponse response){
 		Boolean adressValid = false;

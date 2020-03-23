@@ -42,11 +42,12 @@
                 v-bind:loggedin="loggedin" 
                 v-on:create-tournament="startTournamentCreation"
                 v-on:edit-tournament="startTournamentEdit"
-                v-on:sign-up="signUpForTournament">
+                v-on:sign-up="signUpForTournament"
+                v-on:close-tournament="closetournament">
             </tournamentlist>
             <tournamentcreator 
                 v-if="creatingtournament" 
-                v-on:create-tournament="createtournament" 
+                v-on:create-tournament="createtournament"
                 v-bind:tournamentprop="tournamenttoedit"
                 v-bind:message="edittournamentmessage">
             </tournamentcreator>
@@ -202,8 +203,10 @@
                                     Max. {{tournament.maxParticipants}} participants</br>
                                     <span v-if="loggedin">Distance is {{tournament.distanceToUser.toFixed(1)}} kilometers</span></br>
                                     <template v-if="loggedin">
-                                        <div class="button"  v-if="tournament.getCanSignUp" v-on:click="signup(tournament)">Sign up</div>
+                                        <div class="button"  v-if="tournament.canSignUp" v-on:click="signup(tournament)">Sign up</div>
                                         <div class="disabledbutton"  v-else>Sign up</div>
+                                        <div class="button"  v-if="tournament.canSignUp" v-on:click="closetournament(tournament)">Close</div>
+                                        <div class="disabledbutton"  v-else>Close</div>
                                         <div class="button"  v-on:click="edittournament(tournament)">Edit</div>
                                     </template>
                                 </div>
@@ -221,6 +224,9 @@
                 },
                 signup(tournament){
                     this.$emit('sign-up', tournament);
+                },
+                closetournament(tournament){
+                    this.$emit('close-tournament', tournament);
                 }
             }
         });
@@ -299,7 +305,6 @@
                 },
                 async checkAdress(adress){
                     var cookie = this.getCookie("XSRF-TOKEN");
-                    console.log("checking adress")
                     const checkadress = await fetch("/checkadress", {
                         method: 'POST',
                         headers: {
@@ -346,6 +351,16 @@
                     });
                     const tournaments = await response.json();
                     this.tournaments = tournaments;
+                    tournaments.forEach(tournament => {
+                        this.closeIfNeeded(tournament);
+                    });
+                },
+                async closeIfNeeded(tournament){
+                    const today = new Date();
+                    const tournamentDate = new Date(tournament.tournamentDate);
+                    if(today >= tournamentDate && tournament.canSignUp){
+                        this.closetournament(tournament);
+                    }
                 },
                 async createtournament(tournament){
                     let namevalid = this.checkName(tournament.name);
@@ -407,6 +422,16 @@
                     user = await response.json();
                     this.user = user;
                     this.getTournaments();
+                },
+                async closetournament(tournament){
+                    var cookie = this.getCookie("XSRF-TOKEN");
+                    var response = await fetch("/closeTournament?tournamentID=" + tournament.tournamentID, {
+                        method: "POST",
+                        headers: {
+                            'X-XSRF-TOKEN': cookie
+                        }
+                    });
+                    tournament.canSignUp = false;
                 },
                 getCookie(cname) {
                     var name = cname + "=";
