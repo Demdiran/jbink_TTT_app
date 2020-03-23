@@ -266,7 +266,7 @@ public class TestTournamentPlanning{
     }
 
     @Test
-    public void TestHasWinner(){
+    public void TestHasWinnerTrue(){
         Player[] players = new Player[8];
         for(int i = 0; i < players.length; i++){
             players[i] = new Player(800 - i);
@@ -293,6 +293,30 @@ public class TestTournamentPlanning{
 
         boolean haswinner = tournamentPlanning.hasWinner();
         assert(haswinner);
+    }
 
+    @Test
+    public void TestHasWinnerFalse(){
+        Player[] players = new Player[8];
+        for(int i = 0; i < players.length; i++){
+            players[i] = new Player(800 - i);
+            players[i].setName("" + i);
+        }
+        TournamentPlanning tournamentPlanning = new TournamentPlanning(players);
+        TournamentRound tournamentRound1 = tournamentPlanning.getCurrentRound();
+        for(Match match : tournamentRound1.getMatches()){
+            match.addGame(new Game(11,9));
+            match.addGame(new Game(11,9));
+            match.addGame(new Game(11,9));
+        }
+        TournamentRound tournamentRound2 = tournamentPlanning.planNextRound();
+        for(Match match : tournamentRound2.getMatches()){
+            match.addGame(new Game(11,0));
+            match.addGame(new Game(11,0));
+            match.addGame(new Game(11,0));
+        }
+
+        boolean haswinner = tournamentPlanning.hasWinner();
+        assert(!haswinner);
     }
 }
