@@ -47,6 +47,7 @@ public class Tournament implements IStorable{
     private Set<Player> participants = new HashSet<Player>();
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "tournamentPlanning_ID")
     private TournamentPlanning tournamentPlanning;
 
     public Tournament(){

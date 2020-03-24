@@ -19,11 +19,11 @@ import javax.persistence.Table;
 public class TournamentRound{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "tournamentRoundID")
+    @Column(name = "tournamentRound_ID")
     private int tournamentRoundID;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "round_match_join")
+    @JoinColumn(name = "tournamentRound_ID")
     private List<Match> matches = new ArrayList<Match>();
 
     public void planMatch(Player player1, Player player2){

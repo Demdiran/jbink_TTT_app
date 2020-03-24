@@ -76,11 +76,12 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
 	}
 
 	@PostMapping("/createTournament")
-	public TournamentResponse createTournament(@AuthenticationPrincipal OAuth2User principal, @RequestBody TournamentResponse tournamentToCreate){
+	public TournamentResponse createTournament(@AuthenticationPrincipal OAuth2User principal, @RequestBody TournamentResponse tournamentToCreate)throws ApiException{
 		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
 		Adresshandler adresshandler = new Adresshandler();
 		Tournament tournament = new Tournament();
 		tournament.copyGeneralInfo(tournamentToCreate);
+		tournament.setAdress(adresshandler.setLonLat(tournament.getAdress()));
 
 		databaseAccessor.createInDB(tournament);
 		int userID = databaseAccessor.getFromDB(principal.getName(), OutsideIDPlayerID.class).getPlayer_ID();
