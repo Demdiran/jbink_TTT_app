@@ -3,7 +3,27 @@ package nl.sogyo.ttt_app.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+@Entity(name = "tournamentround")
+@Table(name = "tournamentrounds")
 public class TournamentRound{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "tournamentRoundID")
+    private int tournamentRoundID;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "round_match_join")
     private List<Match> matches = new ArrayList<Match>();
 
     public void planMatch(Player player1, Player player2){
@@ -15,7 +35,15 @@ public class TournamentRound{
             matches.add(new Match(players.get(i), players.get(i+1)));
         }
     }
-
+    public int getTournamentRoundID() {
+        return tournamentRoundID;
+    }
+    public void setTournamentRoundID(int tournamentRoundID) {
+        this.tournamentRoundID = tournamentRoundID;
+    }
+    public void setMatches(List<Match> matches) {
+        this.matches = matches;
+    }
     public List<Match> getMatches(){
         return matches;
     }

@@ -5,7 +5,28 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+@Entity(name = "tournamentplanning")
+@Table(name = "tournamentplannings")
 public class TournamentPlanning{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "tournamentPlanningID")
+    private int tournamentPlanningID;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "planning_round_join")
     private List<TournamentRound> rounds = new ArrayList<TournamentRound>();
 
     public TournamentPlanning(Player...players){
@@ -62,6 +83,18 @@ public class TournamentPlanning{
         List<Player> orderedTournamentPlayers = orderTournamentPlayers(firstHalf);
         orderedTournamentPlayers.addAll(orderTournamentPlayers(secondHalf));
         return orderedTournamentPlayers;
+    }
+    public List<TournamentRound> getRounds() {
+        return rounds;
+    }
+    public int getTournamentPlanningID() {
+        return tournamentPlanningID;
+    }
+    public void setRounds(List<TournamentRound> rounds) {
+        this.rounds = rounds;
+    }
+    public void setTournamentPlanningID(int tournamentPlanningID) {
+        this.tournamentPlanningID = tournamentPlanningID;
     }
 
     public Match getNextMatch(){

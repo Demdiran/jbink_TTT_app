@@ -14,11 +14,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import nl.sogyo.ttt_app.api.IStorable;
 import nl.sogyo.ttt_app.api.TournamentResponse;
-@Entity
+@Entity(name = "tournament")
 @Table(name = "tournaments")
 public class Tournament implements IStorable{
     @Id
@@ -44,12 +46,19 @@ public class Tournament implements IStorable{
     @ManyToMany(mappedBy = "tournaments", fetch = FetchType.LAZY)
     private Set<Player> participants = new HashSet<Player>();
 
-    public Tournament(){
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private TournamentPlanning tournamentPlanning;
 
+    public Tournament(){
     }
 
     public Tournament(String name){
         this.name = name;
+    }
+
+    public void makePlanning(){
+        this.canSignUp = false;
+        this.tournamentPlanning = new TournamentPlanning(this.participants.toArray(new Player[0]));
     }
 
     public int getID(){
