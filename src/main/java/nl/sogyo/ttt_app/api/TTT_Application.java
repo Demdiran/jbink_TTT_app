@@ -150,11 +150,21 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
 		return adressValid;
 	}
 
+	@PostMapping("createPlanning")
+	public PlanningResponse createPlanning(Integer tournamentID){
+		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
+		Tournament tournament = databaseAccessor.getFromDB(tournamentID, Tournament.class);
+		tournament.createPlanning();
+		databaseAccessor.updateInDB(tournament);
+		return new PlanningResponse(tournament.getTournamentPlanning());
+	}
+
 	@PostMapping("/createPlayers")
 	public void createPlayers(@AuthenticationPrincipal OAuth2User principal){
 		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
 		int userID = databaseAccessor.getFromDB(principal.getName(), OutsideIDPlayerID.class).getPlayer_ID();
 		Player player = databaseAccessor.getFromDB(userID, Player.class);
+		List<Tournament> tournaments = databaseAccessor.getAllFromDB(Tournament.class);
 		for(int i = 0; i < 10; i++){
 			Player testPlayer = new Player(i + 100);
 			testPlayer.setName("testplayer" + i);
@@ -163,6 +173,10 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
 			databaseAccessor.updateInDB(player);
 			Match match = new Match(player, testPlayer);
 			databaseAccessor.createInDB(match);
+			for(Tournament tournament : tournaments){
+				testPlayer.signUpForTournament(tournament);
+				databaseAccessor.updateInDB(testPlayer);
+			}
 		}
 	}
 

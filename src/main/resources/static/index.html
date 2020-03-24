@@ -22,6 +22,9 @@
                 v-on:log-out="logout">
             </logoutbutton>
         </template>
+        <template v-else-if="planning != null">
+            <planningscreen v-bind:planning="planning"></planningscreen>
+        </template>
         <template v-else>
             <template v-if="!loggedin">
                 <loginscreen v-on:logging-in="login"></loginscreen>
@@ -44,7 +47,8 @@
                 v-on:create-tournament="startTournamentCreation"
                 v-on:edit-tournament="startTournamentEdit"
                 v-on:sign-up="signUpForTournament"
-                v-on:close-tournament="closetournament">
+                v-on:close-tournament="closetournament"
+                v-on:create-planning="createplanning">
             </tournamentlist>
             <tournamentcreator 
                 v-if="creatingtournament" 
@@ -62,6 +66,14 @@
     </div>
 
       <script>
+        Vue.component('planningscreen', {
+            props: [ 'planning' ],
+            template: `
+                <div>
+                    {{planning}}
+                </div>
+            `
+        });
         Vue.component('loginscreen', {
             template: `
                 <div class="unauthenticated">
@@ -209,6 +221,7 @@
                                         <div class="button"  v-if="tournament.canSignUp" v-on:click="closetournament(tournament)">Close</div>
                                         <div class="disabledbutton"  v-else>Close</div>
                                         <div class="button"  v-on:click="edittournament(tournament)">Edit</div>
+                                        <div class="button" v-on:click="createplanning(tournament)">Create planning</div>
                                     </template>
                                 </div>
                         </li>
@@ -228,6 +241,9 @@
                 },
                 closetournament(tournament){
                     this.$emit('close-tournament', tournament);
+                },
+                createplanning(tournament){
+                    this.$emit('create-planning', tournament);
                 }
             }
         });
@@ -241,7 +257,8 @@
                 edittournamentmessage: undefined,
                 creatingtournament : false,
                 tournamenttoedit: undefined,
-                editingtournament: false
+                editingtournament: false,
+                planning: null
             },
             computed: {
                 loggedin(){
@@ -442,6 +459,19 @@
                             'X-XSRF-TOKEN': cookie
                         }
                     });
+                },
+                async createplanning(tournament){
+                    var cookie = this.getCookie("XSRF-TOKEN");
+                    var response = await fetch("/createPlanning?tournamentID=" + tournament.tournamentID, {
+                        method: "POST",
+                        headers: {
+                            'X-XSRF-TOKEN': cookie,
+                            'Accept' : 'application/json'
+                        }
+                    });
+                    var planning = await response.json();
+                    this.planning = planning;
+                    tournament.canSignUp = false;
                 },
                 getCookie(cname) {
                     var name = cname + "=";

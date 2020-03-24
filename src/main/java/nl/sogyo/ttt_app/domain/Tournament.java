@@ -57,7 +57,7 @@ public class Tournament implements IStorable{
         this.name = name;
     }
 
-    public void makePlanning(){
+    public void createPlanning(){
         this.canSignUp = false;
         this.tournamentPlanning = new TournamentPlanning(this.participants.toArray(new Player[0]));
     }
@@ -106,6 +106,12 @@ public class Tournament implements IStorable{
     }
     public void setCanSignup(boolean canSignUp){
         this.canSignUp = canSignUp;
+    }
+    public TournamentPlanning getTournamentPlanning() {
+        return tournamentPlanning;
+    }
+    public void setTournamentPlanning(TournamentPlanning tournamentPlanning) {
+        this.tournamentPlanning = tournamentPlanning;
     }
     public void closeForSignup(){
         canSignUp = false;

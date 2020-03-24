@@ -29,6 +29,9 @@ public class TournamentPlanning{
     @JoinColumn(name = "tournamentPlanning_ID")
     private List<TournamentRound> rounds = new ArrayList<TournamentRound>();
 
+    public TournamentPlanning(){
+    }
+
     public TournamentPlanning(Player...players){
         List<Player> tournamentPlayers = new ArrayList<Player>(Arrays.asList(players));
         if(tournamentPlayers.size() == 0){
