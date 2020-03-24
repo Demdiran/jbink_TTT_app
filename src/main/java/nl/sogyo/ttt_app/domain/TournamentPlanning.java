@@ -39,7 +39,8 @@ public class TournamentPlanning{
         }
         tournamentPlayers.sort(Comparator.comparing(Player::getRating).reversed());
         TournamentRound round = new TournamentRound();
-        int playerByeCount = tournamentPlayers.size() - (int) Math.pow(2,(int) (Math.log(tournamentPlayers.size()) / Math.log(2)));
+        int playerByeCount = (int) Math.pow(2,(int) Math.ceil((Math.log(tournamentPlayers.size()) / Math.log(2)))) - tournamentPlayers.size();
+        System.out.println("playerByeCount: " + playerByeCount);
         for(int i = 0; i < playerByeCount; i++){
             tournamentPlayers.add(null);
         }

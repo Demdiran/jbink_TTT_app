@@ -3,6 +3,7 @@ package nl.sogyo.ttt_app.domain;
 import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -17,8 +18,8 @@ public class TestTournamentPlanning{
         TournamentPlanning tournamentPlanning = new TournamentPlanning(player1, player2);
         TournamentRound tournamentRound = tournamentPlanning.getRounds().get(0);
         Match nextMatch = tournamentRound.getMatches().get(0);
-        assertEquals(nextMatch.getPlayers()[0], player2);
-        assertEquals(nextMatch.getPlayers()[1], player1);
+        assertEquals(nextMatch.getPlayer1(), player2);
+        assertEquals(nextMatch.getPlayer2(), player1);
     }
 
     @Test
@@ -197,8 +198,8 @@ public class TestTournamentPlanning{
         tournamentPlanning.updateRounds();
 
         Match match = tournamentPlanning.getNextMatch();
-        assertEquals(players[0], match.getPlayer1());
-        assertEquals(players[3], match.getPlayer2());
+        assertEquals(players[0], match.getPlayer1(), ""+match.getPlayer1().getRating());
+        assertEquals(players[3], match.getPlayer2(), ""+match.getPlayer2().getRating());
     }
 
     @Test

@@ -30,6 +30,20 @@ ul{
   left: 33%;
   top: 0px;
 }
+#boardgrid {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-gap: 10px;
+  background-color: #2196F3;
+  padding: 10px;
+}
+
+#boardgrid > div{    
+background-color: rgba(255, 255, 255, 0.8);
+text-align: center;
+padding: 20px 0;
+font-size: 30px;
+}
 
 .nrinput{
   width: 40px;

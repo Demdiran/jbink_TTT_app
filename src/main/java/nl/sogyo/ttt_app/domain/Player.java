@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -44,7 +45,12 @@ public class Player implements IStorable{
     )
     private Set<Tournament> tournaments = new HashSet<Tournament>();
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "players")
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "player_match_join",
+        joinColumns = {@JoinColumn(name = "player_ID")},
+        inverseJoinColumns = {@JoinColumn(name = "match_ID")}
+    )
     private Set<Match> matches = new HashSet<Match>();
 
     public Player(){

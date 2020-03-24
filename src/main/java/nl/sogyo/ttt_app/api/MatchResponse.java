@@ -15,7 +15,7 @@ public class MatchResponse {
         this.match_ID = match.getID();
         this.games = match.getGames();
         if(match.getPlayer1() != null)
-        this.players[0] = new PlayerResponse(match.getPlayer1());
+            this.players[0] = new PlayerResponse(match.getPlayer1());
         if(match.getPlayer2() != null)
             this.players[1] = new PlayerResponse(match.getPlayer2());
     }

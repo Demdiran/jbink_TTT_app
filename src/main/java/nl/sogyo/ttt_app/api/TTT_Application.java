@@ -150,7 +150,7 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
 		return adressValid;
 	}
 
-	@PostMapping("createPlanning")
+	@PostMapping("/createPlanning")
 	public PlanningResponse createPlanning(Integer tournamentID){
 		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
 		Tournament tournament = databaseAccessor.getFromDB(tournamentID, Tournament.class);
@@ -165,7 +165,7 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
 		int userID = databaseAccessor.getFromDB(principal.getName(), OutsideIDPlayerID.class).getPlayer_ID();
 		Player player = databaseAccessor.getFromDB(userID, Player.class);
 		List<Tournament> tournaments = databaseAccessor.getAllFromDB(Tournament.class);
-		for(int i = 0; i < 10; i++){
+		for(int i = 0; i < 8; i++){
 			Player testPlayer = new Player(i + 100);
 			testPlayer.setName("testplayer" + i);
 			testPlayer.setAdress(player.getAdress());

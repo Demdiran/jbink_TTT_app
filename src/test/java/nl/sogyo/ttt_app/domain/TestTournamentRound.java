@@ -12,8 +12,8 @@ public class TestTournamentRound{
         TournamentRound tournamentRound = new TournamentRound();
         tournamentRound.planMatch(player1, player2);
         Match match = tournamentRound.getMatches().get(0);
-        assert(match.getPlayers()[0].equals(player1));
-        assert(match.getPlayers()[1].equals(player2));
+        assert(match.getPlayer1().equals(player1));
+        assert(match.getPlayer2().equals(player2));
     }
 
     @Test

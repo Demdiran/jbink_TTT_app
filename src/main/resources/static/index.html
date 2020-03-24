@@ -48,7 +48,8 @@
                 v-on:edit-tournament="startTournamentEdit"
                 v-on:sign-up="signUpForTournament"
                 v-on:close-tournament="closetournament"
-                v-on:create-planning="createplanning">
+                v-on:create-planning="createplanning"
+                v-on:view-planning="viewplanning">
             </tournamentlist>
             <tournamentcreator 
                 v-if="creatingtournament" 
@@ -69,8 +70,15 @@
         Vue.component('planningscreen', {
             props: [ 'planning' ],
             template: `
-                <div>
-                    {{planning}}
+                <div id="boardgrid">
+                    <template v-for="(round, index) in planning.rounds" >
+                        <div v-for="(match, index2) in round.matches" v-bind:style="{'grid-column-start': index+1, 'grid-row-start': (index2+1)*(index+1)}">
+                            <template v-if="match.players[0] != null">{{match.players[0].name}}</br></template>
+                            <template v-else>No player1</br></template>
+                            <template v-if="match.players[1] != null">{{match.players[1].name}}</br></template>                        
+                            <template v-else>No player 2</br></template>
+                        </div>
+                    </template>
                 </div>
             `
         });
@@ -220,8 +228,9 @@
                                         <div class="disabledbutton"  v-else>Sign up</div>
                                         <div class="button"  v-if="tournament.canSignUp" v-on:click="closetournament(tournament)">Close</div>
                                         <div class="disabledbutton"  v-else>Close</div>
-                                        <div class="button"  v-on:click="edittournament(tournament)">Edit</div>
-                                        <div class="button" v-on:click="createplanning(tournament)">Create planning</div>
+                                        <div class="button" v-on:click="edittournament(tournament)">Edit</div>
+                                        <div class="button" v-on:click="createplanning(tournament)" v-if="tournament.planning == null">Create planning</div>
+                                        <div class="button" v-on:click="viewplanning(tournament)" v-else>View planning</div>
                                     </template>
                                 </div>
                         </li>
@@ -244,6 +253,9 @@
                 },
                 createplanning(tournament){
                     this.$emit('create-planning', tournament);
+                },
+                viewplanning(tournament){
+                    this.$emit('view-planning', tournament);
                 }
             }
         });
@@ -459,6 +471,9 @@
                             'X-XSRF-TOKEN': cookie
                         }
                     });
+                },
+                async viewplanning(tournament){
+                    this.planning = tournament.planning;
                 },
                 async createplanning(tournament){
                     var cookie = this.getCookie("XSRF-TOKEN");

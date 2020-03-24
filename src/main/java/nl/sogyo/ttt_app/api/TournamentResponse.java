@@ -15,6 +15,7 @@ public class TournamentResponse{
     private int amountOfParticipants;
     private double distanceToUser;
     private boolean canSignUp;
+    private PlanningResponse planning;
     TournamentResponse(Tournament tournament){
         this.tournamentID = tournament.getID();
         this.name = tournament.getName();
@@ -24,6 +25,8 @@ public class TournamentResponse{
         this.maxParticipants = tournament.getMaxParticipants();
         this.amountOfParticipants = tournament.getParticipants().size();
         this.canSignUp = tournament.getCanSignUp();
+        if(tournament.getTournamentPlanning() != null)
+            this.planning = new PlanningResponse(tournament.getTournamentPlanning());
     }
 
     TournamentResponse(){
@@ -56,6 +59,9 @@ public class TournamentResponse{
     public boolean getCanSignUp(){
         return canSignUp;
     }
+    public PlanningResponse getPlanning() {
+        return planning;
+    }
     public void setAdress(Adress adress) {
         this.adress = adress;
     }
@@ -82,5 +88,8 @@ public class TournamentResponse{
     }
     public void setCanSignUp(boolean canSignUp){
         this.canSignUp = canSignUp;
+    }
+    public void setPlanning(PlanningResponse planning) {
+        this.planning = planning;
     }
 }
