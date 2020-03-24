@@ -26,6 +26,13 @@ public class TournamentRound{
     @JoinColumn(name = "tournamentRound_ID")
     private List<Match> matches = new ArrayList<Match>();
 
+    public TournamentRound(){
+    }
+    public TournamentRound(int numberOfMatches){
+        for(int i = 0; i < numberOfMatches; i++){
+            matches.add(new Match());
+        }
+    }
     public void planMatch(Player player1, Player player2){
         matches.add(new Match(player1, player2));
     }

@@ -46,24 +46,22 @@ public class TournamentPlanning{
         List<Player> orderedTournamentPlayers = orderTournamentPlayers(tournamentPlayers);
         round.planMatches(orderedTournamentPlayers);
         rounds.add(round);
-    }
-
-    public TournamentRound getCurrentRound(){
-        return rounds.get(rounds.size() - 1);
-    }
-
-    public TournamentRound planNextRound(){
-        TournamentRound currentRound = getCurrentRound();
-
-        if(currentRound.isFinished()){
-            List<Player> playersOfNextRound = currentRound.getWinners();
-            TournamentRound nextRound = new TournamentRound();
-            nextRound.planMatches(playersOfNextRound);
-            rounds.add(nextRound);
-            return nextRound;
+        for(int i = tournamentPlayers.size() / 4; i > 0; i = i/2){
+            rounds.add(new TournamentRound(i));
         }
-        else{
-            throw new CurrentRoundNotFinished();
+    }
+
+    public void updateRounds(){
+        for(int i = 1; i < rounds.size(); i++){
+            List<Match> currentMatches = rounds.get(i).getMatches();
+            List<Match> previousMatches = rounds.get(i-1).getMatches();
+            for(int j = 0; j < currentMatches.size(); j++){
+                boolean parentMatchesPlayed = previousMatches.get(j*2).isFinished() && previousMatches.get(j*2+1).isFinished();
+                if(parentMatchesPlayed){
+                    currentMatches.get(j).setPlayer1(previousMatches.get(j*2).getWinner(3));
+                    currentMatches.get(j).setPlayer2(previousMatches.get(j*2+1).getWinner(3));
+                }
+            }
         }
     }
 
@@ -101,14 +99,20 @@ public class TournamentPlanning{
     }
 
     public Match getNextMatch(){
-        return getCurrentRound().getNextMatch();
+        for(TournamentRound round : rounds){
+            for(Match match : round.getMatches()){
+                if(!match.isFinished())
+                    return match;
+            }
+        }
+        return null;
     }
 
     public Player getTournamentWinner(){
-        return getCurrentRound().getTournamentWinner();
+        return rounds.get(rounds.size() - 1).getTournamentWinner();
     }
 
     public boolean hasWinner(){
-        return getCurrentRound().hasWinner();
+        return rounds.get(rounds.size() - 1).hasWinner();
     }
 }
