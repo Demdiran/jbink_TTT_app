@@ -25,7 +25,7 @@
         <template v-else-if="planning != null">
             <planningscreen 
                 v-bind:planning="planning"
-                v-on:edit-match="match => this.matchtoedit = match">
+                v-on:edit-match="starteditingmatch">
             </planningscreen>
         </template>
         <template v-else>
@@ -67,24 +67,20 @@
                 v-bind:message="edittournamentmessage">
             </tournamenteditor>
         </template>
-        <template
-            v-if="editingmatch">
-            <matchscreen
-                v-bind:matchtoedit="matchtoedit">
-            </matchscreen>
+        <template>
+            <matchscreen ref="matcheditscreen"></matchscreen>
         </template>
     </div>
 
       <script>
         Vue.component('matchscreen', {
-            props: [ 'matchtoedit' ],
             data() {
                 return{
-                    match: this.matchtoedit,
+                    match: null,
                 }
             },
             template: `
-                <div id="matcheditpopup">
+                <div id="matcheditpopup" v-if="match != null">
                     <div id="matcheditformcontainer">
                         <p>{{match.players[0].name}} - {{match.players[1].name}}</p>
                         <ul>
@@ -95,10 +91,13 @@
                             <li>5. <input v-model="match.games[4].pointsPlayer1" /> - <input v-model="match.games[4].pointsPlayer2" /></li>
                         </ul>
                     </div>
+                    <button v-on:click="cancel">Cancel</button>
                 </div>
             `,
             methods :{
-
+                cancel(){
+                    this.match = null;
+                }
             }
         });
         Vue.component('planningscreen', {
@@ -318,15 +317,11 @@
                 tournamenttoedit: undefined,
                 editingtournament: false,
                 planning: null,
-                matchtoedit: null
             },
             computed: {
                 loggedin(){
                     return this.user != undefined;
                 },
-                editingmatch(){
-                    return this.matchtoedit != null;
-                }
             },
             created:
                 function () {
@@ -582,6 +577,12 @@
                 startTournamentEdit(tournament){
                     this.tournamenttoedit = tournament;
                     this.editingtournament = true;
+                },
+                starteditingmatch(match){
+                    this.$refs.matcheditscreen.match = match;
+                },
+                stopeditingmatch(){
+                    this.$refs.matcheditscreen.match = null;
                 }
             }
 
