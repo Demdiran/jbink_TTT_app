@@ -67,7 +67,7 @@ public class Game implements IStorable{
 
     public String getWinner(){
         if(Math.abs(pointsPlayer1 - pointsPlayer2) < 2){
-            return null;
+            return "neither";
         }
         else if(pointsPlayer1 >= Math.max(pointsPlayer2, 11)){
             return "player1";
@@ -76,7 +76,7 @@ public class Game implements IStorable{
             return "player2";
         }
         else{
-            return null;
+            return "neither";
         }
     }
 }

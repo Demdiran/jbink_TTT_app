@@ -58,8 +58,8 @@ public class TournamentPlanning{
             for(int j = 0; j < currentMatches.size(); j++){
                 boolean parentMatchesPlayed = previousMatches.get(j*2).isFinished() && previousMatches.get(j*2+1).isFinished();
                 if(parentMatchesPlayed){
-                    currentMatches.get(j).setPlayer1(previousMatches.get(j*2).getWinner(3));
-                    currentMatches.get(j).setPlayer2(previousMatches.get(j*2+1).getWinner(3));
+                    currentMatches.get(j).setPlayer1(previousMatches.get(j*2).getWinner());
+                    currentMatches.get(j).setPlayer2(previousMatches.get(j*2+1).getWinner());
                 }
             }
         }

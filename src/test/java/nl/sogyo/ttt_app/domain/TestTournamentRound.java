@@ -22,9 +22,9 @@ public class TestTournamentRound{
         Player player2 = new Player(1000);
         tournamentRound.planMatch(player1, player2);
         Match match = tournamentRound.getMatches().get(0);
-        match.addGame(new Game(11, 9));
-        match.addGame(new Game(11, 9));
-        match.addGame(new Game(11, 9));
+        match.setGame(11, 9, 0);
+        match.setGame(11, 9, 1);
+        match.setGame(11, 9, 2);
         assert(tournamentRound.isFinished());
     }
 
@@ -49,13 +49,13 @@ public class TestTournamentRound{
         Match match1 = tournamentRound.getMatches().get(0);
         Match match2 = tournamentRound.getMatches().get(1);
         
-        match1.addGame(new Game(11,9));
-        match1.addGame(new Game(11,9));
-        match1.addGame(new Game(11,9));
+        match1.setGame(11, 9, 0);
+        match1.setGame(11, 9, 1);
+        match1.setGame(11, 9, 2);
 
-        match2.addGame(new Game(11,9));
-        match2.addGame(new Game(11,9));
-        match2.addGame(new Game(11,9));
+        match2.setGame(11, 9, 0);
+        match2.setGame(11, 9, 1);
+        match2.setGame(11, 9, 2);
 
         assert(tournamentRound.isFinished());
     }

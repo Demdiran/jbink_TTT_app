@@ -26,21 +26,31 @@ public class Match implements IStorable{
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "match_ID")
-    private List<Game> games = new ArrayList<Game>();
+    private List<Game> games;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "matchPlayers_ID")
     private MatchPlayers players = new MatchPlayers();;
     public Match(){
+        initialiseGames();
     }
 
     public Match(Player byePlayer){
+        initialiseGames();
         this.players.setPlayer1(byePlayer);
     }
 
     public Match(Player player1, Player player2){
+        initialiseGames();
         this.players.setPlayer1(player1);
         this.players.setPlayer2(player2);
+    }
+
+    private void initialiseGames(){
+        this.games = new ArrayList<Game>();
+        for(int i = 0; i < 5; i++){
+            games.add(new Game());
+        }
     }
 
     public int getID(){
@@ -63,19 +73,15 @@ public class Match implements IStorable{
         return games;
     }
 
-    public void addGame(Game game){
-        games.add(game);
-    }
-
-    public void removeGame(int index){
-        games.remove(index);
+    public void setGame(int pointsPlayer1, int pointsPlayer2, int gamenr){
+        this.games.get(gamenr).setScore(pointsPlayer1, pointsPlayer2);
     }
 
     public boolean isFinished(){
-        return getWinner(3) != null;
+        return getWinner() != null;
     }
 
-    public Player getWinner(int gamesToWin){
+    public Player getWinner(){
         if(players.getPlayer2() == null)
             return players.getPlayer1();
         int scorePlayer1 = 0;
@@ -86,9 +92,9 @@ public class Match implements IStorable{
             if(game.getWinner().equals("player2"))
                 scorePlayer2++;
         }
-        if(scorePlayer1 >= gamesToWin)
+        if(scorePlayer1 >= 3)
             return players.getPlayer1();
-        if(scorePlayer2 >= gamesToWin)
+        if(scorePlayer2 >= 3)
             return players.getPlayer2();
         return null;
     }

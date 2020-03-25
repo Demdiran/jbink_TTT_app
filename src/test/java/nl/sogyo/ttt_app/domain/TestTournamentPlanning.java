@@ -59,9 +59,9 @@ public class TestTournamentPlanning{
         TournamentPlanning tournamentPlanning = new TournamentPlanning(players);
         TournamentRound tournamentRound = tournamentPlanning.getRounds().get(0);
         for(Match match : tournamentRound.getMatches()){
-            match.addGame(new Game(11, 9));
-            match.addGame(new Game(11, 9));
-            match.addGame(new Game(11, 9));
+            match.setGame(11, 9, 0);
+            match.setGame(11, 9, 1);
+            match.setGame(11, 9, 2);
         }
         assert(tournamentRound.isFinished());
         tournamentPlanning.updateRounds();
@@ -85,16 +85,16 @@ public class TestTournamentPlanning{
         TournamentPlanning tournamentPlanning = new TournamentPlanning(players);
         TournamentRound tournamentRound1 = tournamentPlanning.getRounds().get(0);
         for(Match match : tournamentRound1.getMatches()){
-            match.addGame(new Game(11,9));
-            match.addGame(new Game(11,9));
-            match.addGame(new Game(11,9));
+            match.setGame(11, 9, 0);
+            match.setGame(11, 9, 1);
+            match.setGame(11, 9, 2);
         }
         tournamentPlanning.updateRounds();
         TournamentRound tournamentRound2 = tournamentPlanning.getRounds().get(1);
         for(Match match : tournamentRound2.getMatches()){
-            match.addGame(new Game(11,0));
-            match.addGame(new Game(11,0));
-            match.addGame(new Game(11,0));
+            match.setGame(11, 0, 0);
+            match.setGame(11, 0, 1);
+            match.setGame(11, 0, 2);
         }
         tournamentPlanning.updateRounds();
         TournamentRound tournamentRound3 = tournamentPlanning.getRounds().get(2);
@@ -114,9 +114,9 @@ public class TestTournamentPlanning{
         TournamentPlanning tournamentPlanning = new TournamentPlanning(players);
         TournamentRound tournamentRound1 = tournamentPlanning.getRounds().get(0);
         for(Match match : tournamentRound1.getMatches()){
-            match.addGame(new Game(11,9));
-            match.addGame(new Game(11,9));
-            match.addGame(new Game(11,9));
+            match.setGame(11, 9, 0);
+            match.setGame(11, 9, 1);
+            match.setGame(11, 9, 2);
         }
         Match player0lost = tournamentRound1.getMatches().get(0);
         for(Game game : player0lost.getGames()){
@@ -143,8 +143,8 @@ public class TestTournamentPlanning{
         Match match34 = tournamentRound1.getMatches().get(1);
         Match match25 = tournamentRound1.getMatches().get(3);
         for(int i = 0; i < 3; i++){
-            match34.addGame(new Game(4,11));
-            match25.addGame(new Game(4,11));
+            match34.setGame(4, 11, i);
+            match25.setGame(4, 11, i);
         }
         assert(tournamentRound1.isFinished());
         tournamentPlanning.updateRounds();
@@ -189,9 +189,9 @@ public class TestTournamentPlanning{
         TournamentPlanning tournamentPlanning = new TournamentPlanning(players);
         TournamentRound tournamentRound1 = tournamentPlanning.getRounds().get(0);
         for(Match match : tournamentRound1.getMatches()){
-            match.addGame(new Game(11,9));
-            match.addGame(new Game(11,9));
-            match.addGame(new Game(11,9));
+            match.setGame(11, 9, 0);
+            match.setGame(11, 9, 1);
+            match.setGame(11, 9, 2);
         }
         tournamentPlanning.updateRounds();
 
@@ -210,23 +210,23 @@ public class TestTournamentPlanning{
         TournamentPlanning tournamentPlanning = new TournamentPlanning(players);
         TournamentRound tournamentRound1 = tournamentPlanning.getRounds().get(0);
         for(Match match : tournamentRound1.getMatches()){
-            match.addGame(new Game(11,9));
-            match.addGame(new Game(11,9));
-            match.addGame(new Game(11,9));
+            match.setGame(11, 9, 0);
+            match.setGame(11, 9, 1);
+            match.setGame(11, 9, 2);
         }
         tournamentPlanning.updateRounds();
         TournamentRound tournamentRound2 = tournamentPlanning.getRounds().get(1);
         for(Match match : tournamentRound2.getMatches()){
-            match.addGame(new Game(11,0));
-            match.addGame(new Game(11,0));
-            match.addGame(new Game(11,0));
+            match.setGame(11, 0, 0);
+            match.setGame(11, 0, 1);
+            match.setGame(11, 0, 2);
         }
         tournamentPlanning.updateRounds();
         TournamentRound tournamentRound3 = tournamentPlanning.getRounds().get(2);
         Match finals = tournamentRound3.getMatches().get(0);
-        finals.addGame(new Game(3, 11));
-        finals.addGame(new Game(3, 11));
-        finals.addGame(new Game(3, 11));
+        finals.setGame(3, 11, 0);
+        finals.setGame(3, 11, 1);
+        finals.setGame(3, 11, 2);
         Player winner = tournamentPlanning.getTournamentWinner();
         assertEquals(players[1], winner, winner.getName());
     }
@@ -241,16 +241,16 @@ public class TestTournamentPlanning{
         TournamentPlanning tournamentPlanning = new TournamentPlanning(players);
         TournamentRound tournamentRound1 = tournamentPlanning.getRounds().get(0);
         for(Match match : tournamentRound1.getMatches()){
-            match.addGame(new Game(11,9));
-            match.addGame(new Game(11,9));
-            match.addGame(new Game(11,9));
+            match.setGame(11, 9, 0);
+            match.setGame(11, 9, 1);
+            match.setGame(11, 9, 2);
         }
         tournamentPlanning.updateRounds();
         TournamentRound tournamentRound2 = tournamentPlanning.getRounds().get(1);
         for(Match match : tournamentRound2.getMatches()){
-            match.addGame(new Game(11,0));
-            match.addGame(new Game(11,0));
-            match.addGame(new Game(11,0));
+            match.setGame(11, 0, 0);
+            match.setGame(11, 0, 1);
+            match.setGame(11, 0, 2);
         }
         Player winner = tournamentPlanning.getTournamentWinner();
         assertEquals(null, winner);
@@ -266,23 +266,23 @@ public class TestTournamentPlanning{
         TournamentPlanning tournamentPlanning = new TournamentPlanning(players);
         TournamentRound tournamentRound1 = tournamentPlanning.getRounds().get(0);
         for(Match match : tournamentRound1.getMatches()){
-            match.addGame(new Game(11,9));
-            match.addGame(new Game(11,9));
-            match.addGame(new Game(11,9));
+            match.setGame(11, 9, 0);
+            match.setGame(11, 9, 1);
+            match.setGame(11, 9, 2);
         }
         tournamentPlanning.updateRounds();
         TournamentRound tournamentRound2 = tournamentPlanning.getRounds().get(1);
         for(Match match : tournamentRound2.getMatches()){
-            match.addGame(new Game(11,0));
-            match.addGame(new Game(11,0));
-            match.addGame(new Game(11,0));
+            match.setGame(11, 0, 0);
+            match.setGame(11, 0, 1);
+            match.setGame(11, 0, 2);
         }
         tournamentPlanning.updateRounds();
         TournamentRound tournamentRound3 = tournamentPlanning.getRounds().get(2);
         Match finals = tournamentRound3.getMatches().get(0);
-        finals.addGame(new Game(3, 11));
-        finals.addGame(new Game(3, 11));
-        finals.addGame(new Game(3, 11));
+        finals.setGame(3, 11, 0);
+        finals.setGame(3, 11, 1);
+        finals.setGame(3, 11, 2);
 
         boolean haswinner = tournamentPlanning.hasWinner();
         assert(haswinner);
@@ -298,16 +298,16 @@ public class TestTournamentPlanning{
         TournamentPlanning tournamentPlanning = new TournamentPlanning(players);
         TournamentRound tournamentRound1 = tournamentPlanning.getRounds().get(0);
         for(Match match : tournamentRound1.getMatches()){
-            match.addGame(new Game(11,9));
-            match.addGame(new Game(11,9));
-            match.addGame(new Game(11,9));
+            match.setGame(11, 9, 0);
+            match.setGame(11, 9, 1);
+            match.setGame(11, 9, 2);
         }
         tournamentPlanning.updateRounds();
         TournamentRound tournamentRound2 = tournamentPlanning.getRounds().get(1);
         for(Match match : tournamentRound2.getMatches()){
-            match.addGame(new Game(11,0));
-            match.addGame(new Game(11,0));
-            match.addGame(new Game(11,0));
+            match.setGame(11, 0, 0);
+            match.setGame(11, 0, 1);
+            match.setGame(11, 0, 2);
         }
 
         boolean haswinner = tournamentPlanning.hasWinner();

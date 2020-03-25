@@ -58,7 +58,7 @@ public class TournamentRound{
     public List<Player> getWinners(){
         List<Player> players = new ArrayList<Player>();
         for(Match match : matches){
-            players.add(match.getWinner(3));
+            players.add(match.getWinner());
         }
         return players;
     }
@@ -81,7 +81,7 @@ public class TournamentRound{
 
     public Player getTournamentWinner(){
         if(matches.size() == 1){
-            return matches.get(0).getWinner(3);
+            return matches.get(0).getWinner();
         }
         else{
             return null;

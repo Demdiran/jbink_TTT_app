@@ -193,11 +193,10 @@ public class TestDatabaseAccessor{
     }
 
     @Test
-    public void TestAddGameToMatch(){
+    public void TestSetGameScoreInMatch(){
         Match match = new Match();
-
-        Game game1 = new Game(11, 12);
-        match.addGame(game1);
+        Game game1 = match.getGames().get(0);
+        match.setGame(11, 12, 0);
         databaseAccessor.createInDB(match);
 
         hibernateSession.clear();
@@ -205,26 +204,6 @@ public class TestDatabaseAccessor{
         Match match2 = databaseAccessor.getFromDB(match.getID(), Match.class);
         Game game2 = databaseAccessor.getFromDB(game1.getID(), Game.class);
         assertEquals(match2.getGames().get(0).getID(), game2.getID());
-    }
-
-    @Test
-    public void TestRemoveGameFromMatchRemovesFromDB(){
-        Match match = new Match();
-        Game game1 = new Game(11, 12);
-        match.addGame(game1);
-        databaseAccessor.createInDB(match);
-
-        hibernateSession.clear();
-
-        Match match2 = databaseAccessor.getFromDB(match.getID(), Match.class);
-        match2.removeGame(0);
-        databaseAccessor.updateInDB(match2);
-
-        hibernateSession.clear();
-
-        Game game2 = databaseAccessor.getFromDB(game1.getID(), Game.class);
-
-        assert(game2 == null);
     }
 
     @Test

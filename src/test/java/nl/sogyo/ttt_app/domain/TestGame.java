@@ -29,6 +29,6 @@ public class TestGame{
     @Test
     public void TestGetWinnerNone(){
         Game game = new Game(9, 10);
-        assertEquals(null, game.getWinner());
+        assertEquals("neither", game.getWinner());
     }
 }

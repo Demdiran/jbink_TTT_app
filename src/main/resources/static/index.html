@@ -23,7 +23,10 @@
             </logoutbutton>
         </template>
         <template v-else-if="planning != null">
-            <planningscreen v-bind:planning="planning"></planningscreen>
+            <planningscreen 
+                v-bind:planning="planning"
+                v-on:edit-match="match => this.matchToEdit = match">
+            </planningscreen>
         </template>
         <template v-else>
             <template v-if="!loggedin">
@@ -67,12 +70,33 @@
     </div>
 
       <script>
+        Vue.component('matchscreen', {
+            props: [ 'matchToEdit' ],
+            data() {
+                return{
+                    match: this.matchToEdit,
+                }
+            },
+            template: `
+                <div id="matcheditpopup">
+                    <ul>
+                        <li><input v-model="match.games[0].pointsPlayer1" /></li>
+                    </ul>
+                </div>
+            `,
+            methods :{
+
+            }
+        });
         Vue.component('planningscreen', {
             props: [ 'planning' ],
             template: `
                 <div id="boardgrid">
                     <template v-for="(round, index) in planning.rounds" >
-                        <div v-for="(match, index2) in round.matches" v-bind:style="{'grid-column-start': index+1, 'grid-row-start': (index2+1)*(index+1)}">
+                        <div 
+                            v-for="(match, index2) in round.matches" 
+                            v-bind:style="{'grid-column-start': index+1, 'grid-row-start': (index2+1)*(index+1)}"
+                            v-on:click="editmatch(match)">
                             <template v-if="match.players[0] != null">{{match.players[0].name}}</br></template>
                             <template v-else>No player1</br></template>
                             <template v-if="match.players[1] != null">{{match.players[1].name}}</br></template>                        
@@ -80,7 +104,17 @@
                         </div>
                     </template>
                 </div>
-            `
+            `,
+            methods: {
+                editmatch(match){
+                    if(match.players[0] != null && match.players[1] != null){
+                        this.$emit('edit-match', match);
+                    }
+                    else{
+                        window.alert("This match is not ready yet.");
+                    }
+                }
+            }
         });
         Vue.component('loginscreen', {
             template: `
@@ -270,7 +304,8 @@
                 creatingtournament : false,
                 tournamenttoedit: undefined,
                 editingtournament: false,
-                planning: null
+                planning: null,
+                matchToEdit: null
             },
             computed: {
                 loggedin(){
@@ -473,6 +508,7 @@
                     });
                 },
                 async viewplanning(tournament){
+                    console.log(tournament.planning);
                     this.planning = tournament.planning;
                 },
                 async createplanning(tournament){
