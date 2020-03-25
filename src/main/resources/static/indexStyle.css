@@ -45,6 +45,34 @@ padding: 20px 0;
 font-size: 30px;
 }
 
+#matcheditpopup{
+  position: fixed;
+  left: 45%;
+  top:5%;
+  transform: translate(-45%,5%);
+  border: 2px solid #666;
+  z-index: 9;
+}
+
+#matcheditformcontainer{
+  align-items: center;
+  max-width: 300px;
+  padding: 20px;
+  background-color: #fff;
+}
+
+#matcheditformcontainer input {
+  max-width: 30px;
+  border-style: solid;
+  border-width: thin;
+}
+
+#matcheditformcontainer ul{
+  position:relative;
+  left: 45%;
+  transform: translate(-45%);
+}
+
 .nrinput{
   width: 40px;
 }

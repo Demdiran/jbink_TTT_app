@@ -25,7 +25,7 @@
         <template v-else-if="planning != null">
             <planningscreen 
                 v-bind:planning="planning"
-                v-on:edit-match="match => this.matchToEdit = match">
+                v-on:edit-match="match => this.matchtoedit = match">
             </planningscreen>
         </template>
         <template v-else>
@@ -67,21 +67,34 @@
                 v-bind:message="edittournamentmessage">
             </tournamenteditor>
         </template>
+        <template
+            v-if="editingmatch">
+            <matchscreen
+                v-bind:matchtoedit="matchtoedit">
+            </matchscreen>
+        </template>
     </div>
 
       <script>
         Vue.component('matchscreen', {
-            props: [ 'matchToEdit' ],
+            props: [ 'matchtoedit' ],
             data() {
                 return{
-                    match: this.matchToEdit,
+                    match: this.matchtoedit,
                 }
             },
             template: `
                 <div id="matcheditpopup">
-                    <ul>
-                        <li><input v-model="match.games[0].pointsPlayer1" /></li>
-                    </ul>
+                    <div id="matcheditformcontainer">
+                        <p>{{match.players[0].name}} - {{match.players[1].name}}</p>
+                        <ul>
+                            <li>1. <input v-model="match.games[0].pointsPlayer1" /> - <input v-model="match.games[0].pointsPlayer2" /></li>
+                            <li>2. <input v-model="match.games[1].pointsPlayer1" /> - <input v-model="match.games[1].pointsPlayer2" /></li>
+                            <li>3. <input v-model="match.games[2].pointsPlayer1" /> - <input v-model="match.games[2].pointsPlayer2" /></li>
+                            <li>4. <input v-model="match.games[3].pointsPlayer1" /> - <input v-model="match.games[3].pointsPlayer2" /></li>
+                            <li>5. <input v-model="match.games[4].pointsPlayer1" /> - <input v-model="match.games[4].pointsPlayer2" /></li>
+                        </ul>
+                    </div>
                 </div>
             `,
             methods :{
@@ -305,11 +318,14 @@
                 tournamenttoedit: undefined,
                 editingtournament: false,
                 planning: null,
-                matchToEdit: null
+                matchtoedit: null
             },
             computed: {
                 loggedin(){
                     return this.user != undefined;
+                },
+                editingmatch(){
+                    return this.matchtoedit != null;
                 }
             },
             created:

@@ -98,6 +98,7 @@ class DatabaseAccessor{
 	public void updateInDB(IStorable toUpdate){
 		try {
 			hibernateSession.beginTransaction();
+			hibernateSession.persist(toUpdate);
 			hibernateSession.merge(toUpdate);
 			hibernateSession.getTransaction().commit();
 		} catch (Exception sqlException) {
