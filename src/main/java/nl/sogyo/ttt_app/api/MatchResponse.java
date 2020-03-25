@@ -11,6 +11,9 @@ public class MatchResponse {
     private List<Game> games;
 
 
+    public MatchResponse(){
+    }
+    
     public MatchResponse(Match match){
         this.match_ID = match.getID();
         this.games = match.getGames();

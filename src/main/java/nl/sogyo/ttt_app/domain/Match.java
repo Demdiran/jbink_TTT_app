@@ -24,7 +24,7 @@ public class Match implements IStorable{
     @Column(name = "match_ID")
     private int match_ID;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "match_ID")
     private List<Game> games;
 
@@ -35,15 +35,18 @@ public class Match implements IStorable{
         initialiseGames();
     }
 
-    public Match(Player byePlayer){
-        initialiseGames();
-        this.players.setPlayer1(byePlayer);
-    }
-
     public Match(Player player1, Player player2){
         initialiseGames();
         this.players.setPlayer1(player1);
-        this.players.setPlayer2(player2);
+        if(player2 == null){
+            this.players.setPlayer2(player1);
+            for(Game game : games){
+                game.setScore(11, 0);
+            }
+
+        }
+        else
+            this.players.setPlayer2(player2);
     }
 
     private void initialiseGames(){
@@ -77,13 +80,15 @@ public class Match implements IStorable{
         this.games.get(gamenr).setScore(pointsPlayer1, pointsPlayer2);
     }
 
+    public void setGames(List<Game> games) {
+        this.games = games;
+    }
+
     public boolean isFinished(){
         return getWinner() != null;
     }
 
     public Player getWinner(){
-        if(players.getPlayer2() == null)
-            return players.getPlayer1();
         int scorePlayer1 = 0;
         int scorePlayer2 = 0;
         for(Game game : games){

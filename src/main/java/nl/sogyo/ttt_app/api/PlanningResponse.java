@@ -11,6 +11,9 @@ public class PlanningResponse {
     private int tournamentPlanningID;
     private List<RoundResponse> rounds = new ArrayList<RoundResponse>();
 
+    public PlanningResponse(){
+    }
+    
     public PlanningResponse(TournamentPlanning tournamentPlanning){
         this.tournamentPlanningID = tournamentPlanning.getTournamentPlanningID();
         for(TournamentRound round : tournamentPlanning.getRounds()){

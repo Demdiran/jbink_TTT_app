@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.crypto.Data;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -155,6 +156,8 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
 		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
 		Tournament tournament = databaseAccessor.getFromDB(tournamentID, Tournament.class);
 		tournament.createPlanning();
+		TournamentPlanning planning = tournament.getTournamentPlanning();
+		databaseAccessor.createInDB(planning);
 		databaseAccessor.updateInDB(tournament);
 		return new PlanningResponse(tournament.getTournamentPlanning());
 	}
@@ -178,6 +181,26 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
 				databaseAccessor.updateInDB(testPlayer);
 			}
 		}
+		databaseAccessor.closeSession();
+	}
+
+	@PostMapping("/updateMatch")
+	public void updateMatch(@RequestBody MatchResponse updatedMatch){
+		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
+		Match match = databaseAccessor.getFromDB(updatedMatch.getMatch_ID(), Match.class);
+		match.setGames(updatedMatch.getGames());
+		databaseAccessor.updateInDB(match);
+	}
+
+	@PostMapping("/updatePlanning")
+	public PlanningResponse updatePlanning(Integer planningID){
+		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
+		TournamentPlanning planning = databaseAccessor.getFromDB(planningID, TournamentPlanning.class);
+		planning.updateRounds();
+		databaseAccessor.updateInDB(planning);
+		PlanningResponse response = new PlanningResponse(planning);
+		databaseAccessor.closeSession();
+		return response;
 	}
 
 	@PostMapping("/editprofile")

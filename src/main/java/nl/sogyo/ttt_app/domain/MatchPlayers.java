@@ -10,9 +10,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import nl.sogyo.ttt_app.api.IStorable;
+
 @Entity(name = "MatchPlayers")
 @Table(name = "MatchPlayers")
-public class MatchPlayers{
+public class MatchPlayers implements IStorable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "matchPlayers_ID")

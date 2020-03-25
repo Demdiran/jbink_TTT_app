@@ -16,9 +16,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import nl.sogyo.ttt_app.api.IStorable;
+
 @Entity(name = "tournamentplanning")
 @Table(name = "tournamentplannings")
-public class TournamentPlanning{
+public class TournamentPlanning implements IStorable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "tournamentPlanning_ID")
@@ -56,11 +58,10 @@ public class TournamentPlanning{
             List<Match> currentMatches = rounds.get(i).getMatches();
             List<Match> previousMatches = rounds.get(i-1).getMatches();
             for(int j = 0; j < currentMatches.size(); j++){
-                boolean parentMatchesPlayed = previousMatches.get(j*2).isFinished() && previousMatches.get(j*2+1).isFinished();
-                if(parentMatchesPlayed){
+                if(previousMatches.get(j*2).isFinished())
                     currentMatches.get(j).setPlayer1(previousMatches.get(j*2).getWinner());
+                if(previousMatches.get(j*2+1).isFinished())
                     currentMatches.get(j).setPlayer2(previousMatches.get(j*2+1).getWinner());
-                }
             }
         }
     }

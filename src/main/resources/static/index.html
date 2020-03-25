@@ -68,7 +68,7 @@
             </tournamenteditor>
         </template>
         <template>
-            <matchscreen ref="matcheditscreen"></matchscreen>
+            <matchscreen ref="matcheditscreen" v-on:savematch="savematch"></matchscreen>
         </template>
     </div>
 
@@ -90,13 +90,17 @@
                             <li>4. <input v-model="match.games[3].pointsPlayer1" /> - <input v-model="match.games[3].pointsPlayer2" /></li>
                             <li>5. <input v-model="match.games[4].pointsPlayer1" /> - <input v-model="match.games[4].pointsPlayer2" /></li>
                         </ul>
+                        <button v-on:click="cancel">Cancel</button>
+                        <button v-on:click="save">Save</button>
                     </div>
-                    <button v-on:click="cancel">Cancel</button>
                 </div>
             `,
             methods :{
                 cancel(){
                     this.match = null;
+                },
+                save(){
+                    this.$emit('savematch', this.match);
                 }
             }
         });
@@ -535,6 +539,27 @@
                     this.planning = planning;
                     tournament.canSignUp = false;
                 },
+                async savematch(match){
+                    var cookie = this.getCookie("XSRF-TOKEN");
+                    var response = await fetch("/updateMatch", {
+                        method: "POST",
+                        headers: {
+                            'X-XSRF-TOKEN': cookie,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(match)
+                    });
+
+                    var response2 = await fetch("/updatePlanning?planningID=" + this.planning.tournamentPlanningID, {
+                        method: "POST",
+                        headers:{
+                            'X-XSRF-TOKEN': cookie,
+                            'Accept' : 'application/json'
+                        }
+                    });
+                    this.planning = await response2.json();
+                    this.$refs.matcheditscreen.match = null;
+                },
                 getCookie(cname) {
                     var name = cname + "=";
                     var decodedCookie = decodeURIComponent(document.cookie);
@@ -579,7 +604,7 @@
                     this.editingtournament = true;
                 },
                 starteditingmatch(match){
-                    this.$refs.matcheditscreen.match = match;
+                    this.$refs.matcheditscreen.match = JSON.parse(JSON.stringify(match));
                 },
                 stopeditingmatch(){
                     this.$refs.matcheditscreen.match = null;

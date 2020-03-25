@@ -11,6 +11,9 @@ public class RoundResponse {
     private int tournamentRoundID;
     private List<MatchResponse> matches = new ArrayList<MatchResponse>();
 
+    public RoundResponse(){
+    }
+    
     public RoundResponse(TournamentRound tournamentRound){
         this.tournamentRoundID = tournamentRound.getTournamentRoundID();
         for(Match match : tournamentRound.getMatches()){
