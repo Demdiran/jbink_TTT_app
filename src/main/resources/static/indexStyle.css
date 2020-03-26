@@ -11,6 +11,10 @@ ul{
   margin: 0;
 }
 
+body{
+  margin: 0px;
+}
+
 #logoutbutton{
   position: absolute;
   top: 0px;
@@ -71,6 +75,12 @@ font-size: 30px;
   position:relative;
   left: 45%;
   transform: translate(-22.5%);
+}
+
+#planningbackbutton{
+  position: absolute;
+  top: 0px;
+  right: 0px;
 }
 
 .nrinput{

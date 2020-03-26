@@ -25,7 +25,8 @@
         <template v-else-if="planning != null">
             <planningscreen 
                 v-bind:planning="planning"
-                v-on:edit-match="starteditingmatch">
+                v-on:edit-match="starteditingmatch"
+                v-on:tohomescreen="tohomescreen">
             </planningscreen>
         </template>
         <template v-else>
@@ -107,18 +108,21 @@
         Vue.component('planningscreen', {
             props: [ 'planning' ],
             template: `
-                <div id="boardgrid">
-                    <template v-for="(round, index) in planning.rounds" >
-                        <div 
-                            v-for="(match, index2) in round.matches" 
-                            v-bind:style="{'grid-column-start': index+1, 'grid-row-start': (index2+1)*(index+1)}"
-                            v-on:click="editmatch(match)">
-                            <template v-if="match.players[0] != null">{{match.players[0].name}}</br></template>
-                            <template v-else>No player1</br></template>
-                            <template v-if="match.players[1] != null">{{match.players[1].name}}</br></template>                        
-                            <template v-else>No player 2</br></template>
-                        </div>
-                    </template>
+                <div>
+                    <div class="button" id="planningbackbutton" v-on:click="tohomescreen">Back</div>
+                    <div id="boardgrid">
+                        <template v-for="(round, index) in planning.rounds" >
+                            <div 
+                                v-for="(match, index2) in round.matches" 
+                                v-bind:style="{'grid-column-start': index+1, 'grid-row-start': (index2+1)*(index+1)}"
+                                v-on:click="editmatch(match)">
+                                <template v-if="match.players[0] != null">{{match.players[0].name}}</br></template>
+                                <template v-else>No player1</br></template>
+                                <template v-if="match.players[1] != null">{{match.players[1].name}}</br></template>                        
+                                <template v-else>No player 2</br></template>
+                            </div>
+                        </template>
+                    </div>
                 </div>
             `,
             methods: {
@@ -129,6 +133,9 @@
                     else{
                         window.alert("This match is not ready yet.");
                     }
+                },
+                tohomescreen(){
+                    this.$emit('tohomescreen');
                 }
             }
         });
@@ -245,7 +252,7 @@
                                 <li>{{user.adress.city}}, {{user.adress.postalcode}}</li>
                             </ul>
                         </li>
-                        <li>Tournaments: {{user.tournaments.map(tournament => tournament.name)}}</li>
+                        <li>Tournaments: {{user.tournaments}}</li>
                     </div>
                 </ul>
                 <button v-if="!editingprofile" v-on:click="edit">Edit profile</button>
@@ -270,7 +277,7 @@
                                         <li>{{tournament.adress.street}} {{tournament.adress.streetnumber}}</li>
                                         <li>{{tournament.adress.city}}, {{tournament.adress.postalcode}}</li>
                                     </ul>
-                                    When? {{tournament.tournamentDate}}</br>
+                                    When? {{getdayfromdate(tournament.tournamentDate)}} at {{gettimefromdate(tournament.tournamentDate)}}</br>
                                     Max. {{tournament.maxParticipants}} participants</br>
                                     <span v-if="loggedin">Distance is {{tournament.distanceToUser.toFixed(1)}} kilometers</span></br>
                                     <template v-if="loggedin">
@@ -306,6 +313,18 @@
                 },
                 viewplanning(tournament){
                     this.$emit('view-planning', tournament);
+                },
+                getdayfromdate(date){
+                    var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                    var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+                    let day = days[datum.getDay()];
+                    let daynr = datum.getDate();
+                    let month = months[datum.getMonth()];
+                    let year = datum.getFullYear();
+                    return day + " " + daynr + " " + month + " " + year;
+                },
+                gettimefromdate(date){
+                    return datum.getHours() + ":" + datum.getMinutes();
                 }
             }
         });
@@ -431,9 +450,10 @@
                     });
                     const tournaments = await response.json();
                     this.tournaments = tournaments;
-                    tournaments.forEach(tournament => {
+                    this.tournaments.forEach(tournament => {
                         this.closeIfNeeded(tournament);
                     });
+                    this.tournaments.sort((tournament1, tournament2) => tournament1.distanceToUser - tournament2.distanceToUser);
                 },
                 async closeIfNeeded(tournament){
                     const today = new Date();
@@ -608,6 +628,9 @@
                 },
                 stopeditingmatch(){
                     this.$refs.matcheditscreen.match = null;
+                },
+                tohomescreen(){
+                    this.planning = null;
                 }
             }
 
