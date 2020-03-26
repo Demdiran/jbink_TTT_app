@@ -58,10 +58,19 @@ public class TournamentPlanning implements IStorable{
             List<Match> currentMatches = rounds.get(i).getMatches();
             List<Match> previousMatches = rounds.get(i-1).getMatches();
             for(int j = 0; j < currentMatches.size(); j++){
-                if(previousMatches.get(j*2).isFinished())
-                    currentMatches.get(j).setPlayer1(previousMatches.get(j*2).getWinner());
-                if(previousMatches.get(j*2+1).isFinished())
-                    currentMatches.get(j).setPlayer2(previousMatches.get(j*2+1).getWinner());
+                Match currentMatch = currentMatches.get(j);
+                Match previousMatch1 = previousMatches.get(j*2);
+                Match previousMatch2 = previousMatches.get(j*2+1);
+                if(previousMatch1.isFinished()){
+                    Player winnerPreviousMatch1 = previousMatches.get(j*2).getWinner();
+                    currentMatch.setPlayer1(winnerPreviousMatch1);
+                    winnerPreviousMatch1.addMatch(currentMatch);
+                }
+                if(previousMatch2.isFinished()){
+                    Player winnerPreviousMatch2 = previousMatch2.getWinner();
+                    currentMatch.setPlayer2(winnerPreviousMatch2);
+                    winnerPreviousMatch2.addMatch(currentMatch);
+                }
             }
         }
     }

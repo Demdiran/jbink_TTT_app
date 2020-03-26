@@ -11,15 +11,11 @@ public class PlayerResponse {
     private int player_ID;
     private int rating;
     private String name;
-    private List<Integer> tournaments = new ArrayList<Integer>();
     private Adress adress;
     PlayerResponse(Player player){
         this.player_ID = player.getID();
         this.rating = player.getRating();
         this.name = player.getName();
-        for(Tournament tournament : player.getTournaments()){
-            tournaments.add(tournament.getID());
-        }
     }
 
     PlayerResponse(){
@@ -37,9 +33,6 @@ public class PlayerResponse {
     public void setRating(int rating) {
         this.rating = rating;
     }
-    public void setTournaments(List<Integer> tournaments) {
-        this.tournaments = tournaments;
-    }
     public Adress getAdress() {
         return adress;
     }
@@ -51,8 +44,5 @@ public class PlayerResponse {
     }
     public int getRating() {
         return rating;
-    }
-    public List<Integer> getTournaments() {
-        return tournaments;
     }
 }

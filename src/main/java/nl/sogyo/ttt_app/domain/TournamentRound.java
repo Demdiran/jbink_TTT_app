@@ -41,7 +41,14 @@ public class TournamentRound implements IStorable{
 
     public void planMatches(List<Player> players){
         for(int i = 0; i < players.size(); i+=2){
-            matches.add(new Match(players.get(i), players.get(i+1)));
+            Player player1 = players.get(i);
+            Player player2 = players.get(i+1);
+            Match match = new Match(player1, player2);
+            matches.add(match);
+            if(player1 != null)
+                player1.addMatch(match);
+            if(player2 != null)
+                player2.addMatch(match);
         }
     }
     public int getTournamentRoundID() {

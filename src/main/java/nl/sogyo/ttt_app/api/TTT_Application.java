@@ -2,6 +2,7 @@ package nl.sogyo.ttt_app.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.crypto.Data;
@@ -73,6 +74,30 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
 			response.add(tournamentResponse);
 		}
 		databaseAccessor.closeSession();
+		return response;
+	}
+
+	@GetMapping("/getTournamentsFromID")
+	public List<TournamentResponse> getTournamentsFromID(Integer player_ID){
+		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
+		Player player = databaseAccessor.getFromDB(player_ID, Player.class);
+		Set<Tournament> tournaments = player.getTournaments();
+		List<TournamentResponse> response = new ArrayList<TournamentResponse>();
+		for(Tournament tournament : tournaments){
+			response.add(new TournamentResponse(tournament));
+		}
+		return response;
+	}
+
+	@GetMapping("/getMatchesFromID")
+	public List<MatchResponse> getMatchesFromID(Integer player_ID){
+		DatabaseAccessor databaseAccessor = new DatabaseAccessor();
+		Player player = databaseAccessor.getFromDB(player_ID, Player.class);
+		Set<Match> matches = player.getMatches();
+		List<MatchResponse> response = new ArrayList<MatchResponse>();
+		for(Match match : matches){
+			response.add(new MatchResponse(match));
+		}
 		return response;
 	}
 

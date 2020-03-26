@@ -36,7 +36,9 @@
             <template v-else>
                 <accountview 
                     v-bind:user="user" 
-                    v-bind:editingprofile="editingprofile" 
+                    v-bind:editingprofile="editingprofile"
+                    v-bind:tournaments="usertournaments"
+                    v-bind:matches = "usermatches"
                     v-on:edit-profile="editingprofile=true">
                 </accountview>
                 <button v-on:click="createPlayers">Create players</button>
@@ -239,7 +241,7 @@
             }
         });
         Vue.component('accountview', {
-            props: [ 'user', 'editingprofile'],
+            props: [ 'user', 'editingprofile', 'tournaments', 'matches'],
             template: `
             <div class="informationcolumn">
                 <ul>
@@ -252,7 +254,8 @@
                                 <li>{{user.adress.city}}, {{user.adress.postalcode}}</li>
                             </ul>
                         </li>
-                        <li>Tournaments: {{user.tournaments}}</li>
+                        <li v-if="tournaments != undefined">{{Array.from(tournaments).map(tournament => tournament.name)}}</li>
+                        <li v-if="matches != undefined">{{Array.from(matches).map(match => getmatchstring(match))}}</li>
                     </div>
                 </ul>
                 <button v-if="!editingprofile" v-on:click="edit">Edit profile</button>
@@ -261,6 +264,17 @@
             methods: {
                 edit(){
                     this.$emit('edit-profile');
+                },
+                getmatchstring(match){
+                    var name1 = "planned opponent";
+                    if(match.players[0] != null){
+                        name1 = match.players[0].name;
+                    }
+                    var name2 = "planned opponent";
+                    if(match.players[1] != null){
+                        name2 = match.players[1].name;
+                    }
+                    return name1 + " vs " + name2;
                 }
             }
         });
@@ -315,6 +329,7 @@
                     this.$emit('view-planning', tournament);
                 },
                 getdayfromdate(date){
+                    var datum = new Date(date);
                     var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
                     var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
                     let day = days[datum.getDay()];
@@ -324,6 +339,7 @@
                     return day + " " + daynr + " " + month + " " + year;
                 },
                 gettimefromdate(date){
+                    var datum = new Date(date);
                     return datum.getHours() + ":" + datum.getMinutes();
                 }
             }
@@ -332,6 +348,8 @@
             el: "#app",
             data:{
                 user : undefined,
+                usertournaments : undefined,
+                usermatches : undefined,
                 tournaments : undefined,
                 editingprofile : false,
                 editprofilemessage: undefined,
@@ -352,6 +370,29 @@
                     this.getTournaments();
             },
             methods: {
+                async getTournamentsFromID(player_ID){
+                    var cookie = this.getCookie("XSRF-TOKEN");
+                    const response = await fetch("/getTournamentsFromID?player_ID=" + player_ID, {
+                        method: 'GET',
+                        headers: {
+                            'Accept' : 'application/json',
+                            'X-XSRF-TOKEN': cookie
+                        }
+                    });
+                    this.usertournaments = await response.json();
+                },
+                async getMatchesFromID(player_ID){
+                    var cookie = this.getCookie("XSRF-TOKEN");
+                    const response = await fetch("/getMatchesFromID?player_ID=" + player_ID, {
+                        method: 'GET',
+                        headers: {
+                            'Accept' : 'application/json',
+                            'X-XSRF-TOKEN': cookie
+                        }
+                    });
+                    this.usermatches = await response.json();
+                    console.log(this.usermatches);
+                },
                 async login(){
                     console.log("logging in");
                     var cookie = this.getCookie("XSRF-TOKEN");
@@ -368,6 +409,10 @@
                         this.user = user;
                         if(user.name == null){
                             this.editingprofile = true;
+                        }
+                        else{
+                            this.usertournaments = this.getTournamentsFromID(user.id);
+                            this.usermatches = this.getMatchesFromID(user.id);
                         }
                     }
                 },
@@ -631,6 +676,7 @@
                 },
                 tohomescreen(){
                     this.planning = null;
+                    this.login();
                 }
             }
 

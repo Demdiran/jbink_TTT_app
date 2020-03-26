@@ -65,6 +65,9 @@ public class Player implements IStorable{
         this.rating = rating;
     }
 
+    public void addMatch(Match match){
+        this.matches.add(match);
+    }
     public int getID(){
         return player_ID;
     }
