@@ -65,11 +65,13 @@ public class TTT_Application extends WebSecurityConfigurerAdapter{
 			TournamentResponse tournamentResponse = new TournamentResponse(tournament);
 			if(principal != null){
 				OutsideIDPlayerID outsideIDPlayerID = databaseAccessor.getFromDB(principal.getName(), OutsideIDPlayerID.class);
-				int userID = outsideIDPlayerID.getPlayer_ID();
-				Player player = databaseAccessor.getFromDB(userID, Player.class);
-				Adresshandler distanceCalculator = new Adresshandler();
-				double distance = distanceCalculator.calculateDistance(player.getAdress(), tournament.getAdress());
-				tournamentResponse.setDistanceToUser(distance);
+				if(outsideIDPlayerID != null){
+					int userID = outsideIDPlayerID.getPlayer_ID();
+					Player player = databaseAccessor.getFromDB(userID, Player.class);
+					Adresshandler distanceCalculator = new Adresshandler();
+					double distance = distanceCalculator.calculateDistance(player.getAdress(), tournament.getAdress());
+					tournamentResponse.setDistanceToUser(distance);
+				}
 			}
 			response.add(tournamentResponse);
 		}

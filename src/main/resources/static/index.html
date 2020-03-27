@@ -611,7 +611,6 @@
                     this.plannedtournament = tournament;
                 },
                 async savematch(match){
-                    var cookie = this.getCookie("XSRF-TOKEN");
                     var response = await fetch("/updateMatch", {
                         method: "POST",
                         headers: {
@@ -683,7 +682,7 @@
                 },
                 tohomescreen(){
                     this.plannedtournament = null;
-                    this.login();
+                    this.usermatches = this.getMatchesFromID(this.user.id);
                 }
             }
 
