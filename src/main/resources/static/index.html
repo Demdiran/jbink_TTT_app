@@ -22,9 +22,10 @@
                 v-on:log-out="logout">
             </logoutbutton>
         </template>
-        <template v-else-if="planning != null">
+        <template v-else-if="plannedtournament != null">
             <planningscreen 
-                v-bind:planning="planning"
+                v-bind:tournament="plannedtournament"
+                v-bind:userid="user.id"
                 v-on:edit-match="starteditingmatch"
                 v-on:tohomescreen="tohomescreen">
             </planningscreen>
@@ -49,7 +50,8 @@
             <tournamentlist
                 id="tournamentlist" 
                 v-bind:tournaments="tournaments"
-                v-bind:loggedin="loggedin" 
+                v-bind:loggedin="loggedin"
+                v-bind:user="user"
                 v-on:create-tournament="startTournamentCreation"
                 v-on:edit-tournament="startTournamentEdit"
                 v-on:sign-up="signUpForTournament"
@@ -108,12 +110,12 @@
             }
         });
         Vue.component('planningscreen', {
-            props: [ 'planning' ],
+            props: [ 'tournament', 'userid' ],
             template: `
                 <div>
                     <div class="button" id="planningbackbutton" v-on:click="tohomescreen">Back</div>
                     <div id="boardgrid">
-                        <template v-for="(round, index) in planning.rounds" >
+                        <template v-for="(round, index) in tournament.planning.rounds" >
                             <div 
                                 v-for="(match, index2) in round.matches" 
                                 v-bind:style="{'grid-column-start': index+1, 'grid-row-start': (index2+1)*(index+1)}"
@@ -129,11 +131,13 @@
             `,
             methods: {
                 editmatch(match){
-                    if(match.players[0] != null && match.players[1] != null){
-                        this.$emit('edit-match', match);
-                    }
-                    else{
-                        window.alert("This match is not ready yet.");
+                    if(this.userid == this.tournament.ownerID){
+                        if(match.players[0] != null && match.players[1] != null){
+                            this.$emit('edit-match', match);
+                        }
+                        else{
+                            window.alert("This match is not ready yet.");
+                        }
                     }
                 },
                 tohomescreen(){
@@ -279,7 +283,7 @@
             }
         });
         Vue.component('tournamentlist', {
-            props: [ 'tournaments', 'loggedin' ],
+            props: [ 'tournaments', 'loggedin', 'user' ],
             template: `
                 <div class="informationcolumn">
                     <ul>
@@ -297,11 +301,11 @@
                                     <template v-if="loggedin">
                                         <div class="button"  v-if="tournament.canSignUp" v-on:click="signup(tournament)">Sign up</div>
                                         <div class="disabledbutton"  v-else>Sign up</div>
-                                        <div class="button"  v-if="tournament.canSignUp" v-on:click="closetournament(tournament)">Close</div>
+                                        <div class="button"  v-if="tournament.canSignUp && tournament.ownerID == user.id" v-on:click="closetournament(tournament)">Close</div>
                                         <div class="disabledbutton"  v-else>Close</div>
-                                        <div class="button" v-on:click="edittournament(tournament)">Edit</div>
-                                        <div class="button" v-on:click="createplanning(tournament)" v-if="tournament.planning == null">Create planning</div>
-                                        <div class="button" v-on:click="viewplanning(tournament)" v-else>View planning</div>
+                                        <div class="button" v-on:click="edittournament(tournament)" v-if="tournament.ownerID == user.id">Edit</div>
+                                        <div class="button" v-on:click="createplanning(tournament)" v-if="tournament.planning == null && tournament.ownerID == user.id">Create planning</div>
+                                        <div class="button" v-on:click="viewplanning(tournament)" v-else-if="tournament.planning != null">View planning</div>
                                     </template>
                                 </div>
                         </li>
@@ -357,7 +361,7 @@
                 creatingtournament : false,
                 tournamenttoedit: undefined,
                 editingtournament: false,
-                planning: null,
+                plannedtournament: null,
             },
             computed: {
                 loggedin(){
@@ -499,6 +503,7 @@
                         this.closeIfNeeded(tournament);
                     });
                     this.tournaments.sort((tournament1, tournament2) => tournament1.distanceToUser - tournament2.distanceToUser);
+                    console.log(this.tournaments);
                 },
                 async closeIfNeeded(tournament){
                     const today = new Date();
@@ -588,8 +593,8 @@
                     });
                 },
                 async viewplanning(tournament){
-                    console.log(tournament.planning);
-                    this.planning = tournament.planning;
+                    this.plannedtournament = tournament;
+                    console.log(this.plannedtournament);
                 },
                 async createplanning(tournament){
                     var cookie = this.getCookie("XSRF-TOKEN");
@@ -601,8 +606,9 @@
                         }
                     });
                     var planning = await response.json();
-                    this.planning = planning;
+                    tournament.planning = planning;
                     tournament.canSignUp = false;
+                    this.plannedtournament = tournament;
                 },
                 async savematch(match){
                     var cookie = this.getCookie("XSRF-TOKEN");
@@ -615,14 +621,14 @@
                         body: JSON.stringify(match)
                     });
 
-                    var response2 = await fetch("/updatePlanning?planningID=" + this.planning.tournamentPlanningID, {
+                    var response2 = await fetch("/updatePlanning?planningID=" + this.plannedtournament.planning.tournamentPlanningID, {
                         method: "POST",
                         headers:{
                             'X-XSRF-TOKEN': cookie,
                             'Accept' : 'application/json'
                         }
                     });
-                    this.planning = await response2.json();
+                    this.plannedtournament.planning = await response2.json();
                     this.$refs.matcheditscreen.match = null;
                 },
                 getCookie(cname) {
@@ -660,7 +666,8 @@
                         club: undefined,
                         maxParticipants: undefined,
                         amountOfParticipants: undefined,
-                        distanceToUser: undefined
+                        distanceToUser: undefined,
+                        ownerID: this.user.id,
                     };
                     this.creatingtournament = true;
                 },
@@ -675,7 +682,7 @@
                     this.$refs.matcheditscreen.match = null;
                 },
                 tohomescreen(){
-                    this.planning = null;
+                    this.plannedtournament = null;
                     this.login();
                 }
             }

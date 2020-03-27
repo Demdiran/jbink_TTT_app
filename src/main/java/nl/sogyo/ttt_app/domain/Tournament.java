@@ -41,6 +41,8 @@ public class Tournament implements IStorable{
     private LocalDateTime tournamentDate;
     @Column(name = "max_participants")
     private int maxParticipants;
+    @Column(name = "owner_ID")
+    private int ownerID;
 
     @ManyToMany(mappedBy = "tournaments", fetch = FetchType.LAZY)
     private Set<Player> participants = new HashSet<Player>();
@@ -66,6 +68,12 @@ public class Tournament implements IStorable{
     }
     public void setID(int ID){
         this.tournamentID = ID;
+    }
+    public int getOwnerID() {
+        return ownerID;
+    }
+    public void setOwnerID(int ownerID) {
+        this.ownerID = ownerID;
     }
     public String getName(){
         return name;
@@ -126,5 +134,6 @@ public class Tournament implements IStorable{
         this.club = tournamentResponse.getClub();
         this.maxParticipants = tournamentResponse.getMaxParticipants();
         this.tournamentDate = tournamentResponse.getTournamentDate();
+        this.ownerID = tournamentResponse.getOwnerID();
     }
 }

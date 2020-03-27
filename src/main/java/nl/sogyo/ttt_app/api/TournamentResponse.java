@@ -6,6 +6,7 @@ import nl.sogyo.ttt_app.domain.Adress;
 import nl.sogyo.ttt_app.domain.Tournament;
 
 public class TournamentResponse{
+    private int ownerID;
     private int tournamentID;
     private String name;
     private String club;
@@ -25,6 +26,7 @@ public class TournamentResponse{
         this.maxParticipants = tournament.getMaxParticipants();
         this.amountOfParticipants = tournament.getParticipants().size();
         this.canSignUp = tournament.getCanSignUp();
+        this.ownerID = tournament.getOwnerID();
         if(tournament.getTournamentPlanning() != null)
             this.planning = new PlanningResponse(tournament.getTournamentPlanning());
     }
@@ -62,6 +64,9 @@ public class TournamentResponse{
     public PlanningResponse getPlanning() {
         return planning;
     }
+    public int getOwnerID() {
+        return ownerID;
+    }
     public void setAdress(Adress adress) {
         this.adress = adress;
     }
@@ -91,5 +96,8 @@ public class TournamentResponse{
     }
     public void setPlanning(PlanningResponse planning) {
         this.planning = planning;
+    }
+    public void setOwnerID(int ownerID) {
+        this.ownerID = ownerID;
     }
 }
