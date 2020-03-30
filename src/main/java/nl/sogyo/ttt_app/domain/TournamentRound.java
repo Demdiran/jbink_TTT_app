@@ -80,14 +80,6 @@ public class TournamentRound implements IStorable{
         return finished;
     }
 
-    public Match getNextMatch(){
-        for(Match match : matches){
-            if(!match.isFinished())
-                return match;
-        }
-        throw new RoundHasFinished();
-    }
-
     public Player getTournamentWinner(){
         if(matches.size() == 1){
             return matches.get(0).getWinner();

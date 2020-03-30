@@ -1,11 +1,8 @@
 package nl.sogyo.ttt_app.api;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import nl.sogyo.ttt_app.domain.Adress;
 import nl.sogyo.ttt_app.domain.Player;
-import nl.sogyo.ttt_app.domain.Tournament;
 
 public class PlayerResponse {
     private int player_ID;

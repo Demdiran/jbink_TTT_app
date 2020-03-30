@@ -304,7 +304,10 @@
                                         <div class="button"  v-if="tournament.canSignUp && tournament.ownerID == user.id" v-on:click="closetournament(tournament)">Close</div>
                                         <div class="disabledbutton"  v-else>Close</div>
                                         <div class="button" v-on:click="edittournament(tournament)" v-if="tournament.ownerID == user.id">Edit</div>
-                                        <div class="button" v-on:click="createplanning(tournament)" v-if="tournament.planning == null && tournament.ownerID == user.id">Create planning</div>
+                                        <template v-if="tournament.planning == null && tournament.ownerID == user.id">
+                                            <div class="disabledbutton" v-if="tournament.amountOfParticipants < 2>">Create planning</div>
+                                            <div class="button" v-on:click="createplanning(tournament)" v-else>Create planning</div>
+                                        </template>
                                         <div class="button" v-on:click="viewplanning(tournament)" v-else-if="tournament.planning != null">View planning</div>
                                     </template>
                                 </div>
@@ -571,7 +574,7 @@
                     });
                     user = await response.json();
                     this.user = user;
-                    this.getTournaments();
+                    tournament.amountOfParticipants++;
                 },
                 async closetournament(tournament){
                     var cookie = this.getCookie("XSRF-TOKEN");

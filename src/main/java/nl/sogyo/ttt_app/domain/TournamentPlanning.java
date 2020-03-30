@@ -35,13 +35,12 @@ public class TournamentPlanning implements IStorable{
 
     public TournamentPlanning(Player...players){
         List<Player> tournamentPlayers = new ArrayList<Player>(Arrays.asList(players));
-        if(tournamentPlayers.size() == 0){
-            throw new NoPlayersSignedUpForTournament();
+        if(tournamentPlayers.size() < 2){
+            throw new NotEnoughPlayersSignedUpForTournament();
         }
         tournamentPlayers.sort(Comparator.comparing(Player::getRating).reversed());
         TournamentRound round = new TournamentRound();
-        int playerByeCount = (int) Math.pow(2,(int) Math.ceil((Math.log(tournamentPlayers.size()) / Math.log(2)))) - tournamentPlayers.size();
-        System.out.println("playerByeCount: " + playerByeCount);
+        int playerByeCount = (int) Math.pow(2,(int) Math.ceil(Math.log(tournamentPlayers.size()) / Math.log(2))) - tournamentPlayers.size();
         for(int i = 0; i < playerByeCount; i++){
             tournamentPlayers.add(null);
         }
@@ -76,7 +75,7 @@ public class TournamentPlanning implements IStorable{
     }
 
     private List<Player> orderTournamentPlayers(List<Player> players){
-        if(players.size() == 2){
+        if(players.size() <= 2){
             return players;
         }
         List<Player> firstHalf = new ArrayList<Player>();

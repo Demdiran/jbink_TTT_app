@@ -38,11 +38,11 @@ public class TestTournamentPlanning{
         Match match4 = tournamentRound.getMatches().get(3);
 
         assertEquals(players[4], match1.getPlayer1());
-        assertEquals(null, match1.getPlayer2());
+        assertEquals(players[4], match1.getPlayer2());
         assertEquals(players[2], match2.getPlayer1());
         assertEquals(players[3], match2.getPlayer2());
         assertEquals(players[1], match3.getPlayer1());
-        assertEquals(null, match3.getPlayer2());
+        assertEquals(players[1], match3.getPlayer2());
         assertEquals(players[5], match4.getPlayer1());
         assertEquals(players[0], match4.getPlayer2());
     }
@@ -163,7 +163,7 @@ public class TestTournamentPlanning{
             new TournamentPlanning(new Player[] {});
             fail("Tournamentplanning should throw an exception if no players are signed up.");
         }
-        catch(NoPlayersSignedUpForTournament e){}
+        catch(NotEnoughPlayersSignedUpForTournament e){}
     }
 
     @Test
@@ -312,5 +312,16 @@ public class TestTournamentPlanning{
 
         boolean haswinner = tournamentPlanning.hasWinner();
         assert(!haswinner);
+    }
+
+    @Test
+    public void TestMakePlanningOnePlayer(){
+        try{
+            Player player = new Player(600);
+            player.setName("testplayer");
+            new TournamentPlanning(player);
+            fail("One player is not enough for a tournament.");
+        }
+        catch(NotEnoughPlayersSignedUpForTournament e){}
     }
 }
