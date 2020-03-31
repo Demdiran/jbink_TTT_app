@@ -305,7 +305,7 @@
                                         <div class="disabledbutton"  v-else>Close</div>
                                         <div class="button" v-on:click="edittournament(tournament)" v-if="tournament.ownerID == user.id">Edit</div>
                                         <template v-if="tournament.planning == null && tournament.ownerID == user.id">
-                                            <div class="disabledbutton" v-if="tournament.amountOfParticipants < 2>">Create planning</div>
+                                            <div class="disabledbutton" v-if="tournament.amountOfParticipants < 2">Create planning</div>
                                             <div class="button" v-on:click="createplanning(tournament)" v-else>Create planning</div>
                                         </template>
                                         <div class="button" v-on:click="viewplanning(tournament)" v-else-if="tournament.planning != null">View planning</div>
@@ -614,6 +614,7 @@
                     this.plannedtournament = tournament;
                 },
                 async savematch(match){
+                    var cookie = this.getCookie("XSRF-TOKEN");
                     var response = await fetch("/updateMatch", {
                         method: "POST",
                         headers: {

@@ -75,7 +75,7 @@ public class TournamentPlanning implements IStorable{
     }
 
     private List<Player> orderTournamentPlayers(List<Player> players){
-        if(players.size() <= 2){
+        if(players.size() == 2){
             return players;
         }
         List<Player> firstHalf = new ArrayList<Player>();

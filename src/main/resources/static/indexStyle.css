@@ -49,6 +49,10 @@ padding: 20px 0;
 font-size: 30px;
 }
 
+#boardgrid > div:hover{
+  background-color: chocolate;
+}
+
 #matcheditpopup{
   position: fixed;
   left: 45%;
