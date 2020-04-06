@@ -1,0 +1,121 @@
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+.boardgrid {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-gap: 10px;
+    background-color: #2196F3;
+    padding: 10px;
+    height: 100%;
+}
+
+.boardgrid > div{
+  background-color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  padding: 20px 0;
+  font-size: 30px;
+}
+
+.kalaha{
+  grid-template-columns: none;
+  width: 10%;
+  min-width: 200px;
+}
+
+.playerinfo{
+  width: 10%;
+  height: 10%;
+  background-color: #2196F3;
+  text-align: center;
+  min-width: 200px;
+}
+
+.playerinfo > ul{
+  list-style: none;
+  padding: 0px;
+}
+
+.onturn{
+  border-style: dashed;
+  border-width: 5px;
+  border-color: orange;
+}
+
+#rules{
+  background-color: #2196F3;
+  width: 10%;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  min-width: 200px;
+}
+
+#player1info{
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+#player1pits{
+  position: absolute;
+  top: 0px;
+  left: 50%;
+  margin-left: -500px;
+  width: 80%;
+  height: 10%;
+  max-width: 1000px;
+}
+
+#player1kalaha{
+  position: absolute;
+  top: 10%;
+  left: 0px;
+  height: 10%;
+}
+
+#player2info{
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+}
+
+#player2pits{
+  position: absolute;
+  bottom: 0px;
+  right: 50%;
+  margin-right: -500px;
+  width: 80%;
+  height: 10%;
+  max-width: 1000px;
+}
+
+#player2kalaha{
+  position: absolute;
+  bottom: 10%;
+  right: 0px;
+  height: 10%;
+}
+
+#victoryscreen{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 30%;
+}
+
+@media only screen and (max-width: 1400px){
+  #player1pits{
+    left: 200px;
+    margin-left: 0px;
+  }
+
+  #player2pits{
+    right: 200px;
+    margin-right: 0px;
+  }
+}

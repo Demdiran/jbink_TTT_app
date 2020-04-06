@@ -197,3 +197,7 @@ Settings.JSON
 # OTHER BEGIN
 *.png
 sequence_diagrams/
+
+#NODE BEGIN ------------------------------------------------------
+**/node_modules/
+#NODE END -------------------------------------------------------
