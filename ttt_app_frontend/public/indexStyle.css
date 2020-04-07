@@ -1,121 +1,120 @@
 html {
-  box-sizing: border-box;
-}
-*, *:before, *:after {
-  box-sizing: inherit;
+    box-sizing: border-box;
+  }
+  *, *:before, *:after {
+    box-sizing: inherit;
+  }
+
+ul{  
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
 }
 
-.boardgrid {
-    display: grid;
-    grid-template-columns: auto auto auto;
-    grid-gap: 10px;
-    background-color: #2196F3;
-    padding: 10px;
-    height: 100%;
+body{
+  margin: 0px;
 }
 
-.boardgrid > div{
-  background-color: rgba(255, 255, 255, 0.8);
-  text-align: center;
-  padding: 20px 0;
-  font-size: 30px;
-}
-
-.kalaha{
-  grid-template-columns: none;
-  width: 10%;
-  min-width: 200px;
-}
-
-.playerinfo{
-  width: 10%;
-  height: 10%;
-  background-color: #2196F3;
-  text-align: center;
-  min-width: 200px;
-}
-
-.playerinfo > ul{
-  list-style: none;
-  padding: 0px;
-}
-
-.onturn{
-  border-style: dashed;
-  border-width: 5px;
-  border-color: orange;
-}
-
-#rules{
-  background-color: #2196F3;
-  width: 10%;
-  position: absolute;
-  bottom: 0px;
-  left: 0px;
-  min-width: 200px;
-}
-
-#player1info{
+#logoutbutton{
   position: absolute;
   top: 0px;
-  left: 0px;
+  right: 0px;
+  background-color: aqua;
+  border-style: solid;
+  border-width: 2px;
 }
 
-#player1pits{
+#logoutbutton:hover{
+  background-color: cornflowerblue;
+}
+
+#tournamentlist{
   position: absolute;
   top: 0px;
-  left: 50%;
-  margin-left: -500px;
-  width: 80%;
-  height: 10%;
-  max-width: 1000px;
+  left: 33%;
+  top: 0px;
+}
+#boardgrid {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-gap: 10px;
+  background-color: #2196F3;
+  padding: 10px;
 }
 
-#player1kalaha{
-  position: absolute;
-  top: 10%;
-  left: 0px;
-  height: 10%;
+#boardgrid > div{    
+background-color: rgba(255, 255, 255, 0.8);
+text-align: center;
+padding: 20px 0;
+font-size: 30px;
 }
 
-#player2info{
+#boardgrid > div:hover{
+  background-color: chocolate;
+}
+
+#matcheditpopup{
+  position: fixed;
+  left: 45%;
+  top:5%;
+  transform: translate(-45%,5%);
+  border: 2px solid #666;
+  z-index: 9;
+}
+
+#matcheditformcontainer{
+  align-items: center;
+  max-width: 300px;
+  padding: 20px;
+  background-color: #fff;
+}
+
+#matcheditformcontainer input {
+  max-width: 30px;
+  border-style: solid;
+  border-width: thin;
+}
+
+#matcheditformcontainer ul{
+  position:relative;
+  left: 45%;
+  transform: translate(-22.5%);
+}
+
+#planningbackbutton{
   position: absolute;
-  bottom: 0px;
+  top: 0px;
   right: 0px;
 }
 
-#player2pits{
-  position: absolute;
-  bottom: 0px;
-  right: 50%;
-  margin-right: -500px;
-  width: 80%;
-  height: 10%;
-  max-width: 1000px;
+.nrinput{
+  width: 40px;
 }
 
-#player2kalaha{
-  position: absolute;
-  bottom: 10%;
-  right: 0px;
-  height: 10%;
+.informationbox, .informationcolumn{
+  border-style: solid;
+  border-width: thin;
+  border-color: slategray;
+  margin: 1%;
 }
 
-#victoryscreen{
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 30%;
+.informationcolumn{
+  width: 32%;
 }
 
-@media only screen and (max-width: 1400px){
-  #player1pits{
-    left: 200px;
-    margin-left: 0px;
-  }
+.button{
+  background-color: aqua;
+  border-style: solid;
+  border-width: 2px;
+}
 
-  #player2pits{
-    right: 200px;
-    margin-right: 0px;
-  }
+.button:hover{
+  background-color: cornflowerblue;
+}
+
+
+.disabledbutton{
+  background-color: blue;
+  border-style: solid;
+  border-width: 2px;
 }

@@ -19,7 +19,7 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            title: "Mancala MVC",
+            title: "ttt_app",
             template: "public/index.html",
         })
     ],
@@ -39,7 +39,7 @@ module.exports = {
           'Expires': '-1',
         },
         proxy: {
-            '/mancala/*': 'http://localhost:8080/', // <-- change 8080 to a different port if necessary
+            '/': 'http://localhost:8080/', // <-- change 8080 to a different port if necessary
         }
     }
 }

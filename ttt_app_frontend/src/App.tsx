@@ -1,65 +1,51 @@
 import React, { useState } from "react";
-import { StartGame } from "./mancala/StartGame";
-import { Play } from "./mancala/Play";
-import { GameState, Player } from "./mancala/gameState";
+import { Player, PlayerInfo } from "./ttt_app/PlayerInfo"
 
 export function App() {
 
-    const [ gameState, setGameState ] = useState<GameState | undefined>(undefined);
-    const [ errorMessage, setErrorMessage ] = useState("");
+    const [player, setPlayer] = useState<Player| undefined>(undefined);
 
-    async function tryStartGame(playerOne: string, playerTwo: string) {
-        if (!playerOne) {
-            setErrorMessage("Player 1 name is required!");
-            return;
-        }
-
-        if (!playerTwo) {
-            setErrorMessage("Player 2 name is required!");
-            return;
-        }
-
-        setErrorMessage("");
-
-        try {
-            const response = await fetch('mancala/api/players', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ nameplayer1: playerOne , nameplayer2: playerTwo })
-            });
-    
-            if (response.ok) {
-                const gameState = await response.json();
-                setGameState(gameState);
+    async function getPlayer(){
+        console.log("logging in");
+        var cookie = getCookie("XSRF-TOKEN");
+        const response = await fetch("/user", {
+            method: 'GET',
+            headers:{
+                'Accept' : 'application/json',
+                'X-XSRF-TOKEN': cookie
             }
-            setErrorMessage("Failed to start the game. Try again.");
-        } catch (error) {
-            setErrorMessage(error.toString());
+        });
+        if(response.status != 401){
+            const player: Player = await response.json();
+            console.log(player);
+            setPlayer(player);
         }
     }
 
-    async function doMove(player: Player, pitNumber: number){
-        if(player.hasTurn && pitNumber != 6 && pitNumber != 13){
-            const response = await fetch('mancala/api/play/' + pitNumber, {
-                method: 'PUT',
-                headers: {
-                    'Accept': 'application/json'
-                }
-            });
-            const gameState = await response.json();
-            setGameState(gameState);
+    function getCookie(cname: string){
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for(var i = 0; i <ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+            }
         }
-
+        return "";
     }
 
-    if (!gameState) {
-        return <StartGame onPlayersConfirmed={tryStartGame}
-                          message={errorMessage}
-        />
+    if(!player){
+        getPlayer();
+        return (
+            <div className="unauthenticated">
+                Log in with Google: <a href="/oauth2/authorization/google">click here</a>
+            </div>
+        );
     }
 
-    return <Play gameState={gameState} doMove={doMove} />
+    return <PlayerInfo player={player}></PlayerInfo>
 }
