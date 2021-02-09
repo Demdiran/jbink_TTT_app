@@ -40,7 +40,7 @@ public class Adresshandler{
         
         // Configure API key authorization: key
         ApiKeyAuth key = (ApiKeyAuth) defaultClient.getAuthentication("key");
-        key.setApiKey("73f83eaf658234");
+        key.setApiKey("");
         // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
         //key.setApiKeyPrefix("Token");
     }
